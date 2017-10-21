@@ -7,15 +7,54 @@
 //
 
 import UIKit
+import Firebase
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    var window: UIWindow?
-
+    var window: UIWindow? = {
+        let win = UIWindow(frame: UIScreen.main.bounds)
+        win.backgroundColor = UIColor.white
+        win.makeKeyAndVisible()
+        return win
+    }()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        window!.rootViewController = ViewController()
+        
+//        let defaultStore = FirestoreHelper.store
+        
+//        let player = Player(firstName: "first", lastName: "last", throwing: 2, running: 1, kicking: 13)
+//        let encoder = JSONEncoder()
+//        let json = try! encoder.encode(player)
+//
+//        let dict = try! JSONSerialization.jsonObject(with: json, options: []) as! [String: Any]
+        
+        // Add a new document with a generated ID
+//        var ref: DocumentReference? = nil
+//        ref = defaultStore.collection("users").addDocument(object: player) { err in
+//            if let err = err {
+//                print("Error adding document: \(err)")
+//            } else {
+//                print("Document added with ID: \(ref!.documentID)")
+//            }
+//        }
+//        print("&& DOC AFTER ADD: \(ref), ID?: \(ref?.documentID)")
+        
+//        defaultStore.collection("users").getDocuments() { (querySnapshot, err) in
+//            if let err = err {
+//                print("Error getting documents: \(err)")
+//            } else {
+//                for document in querySnapshot!.documents {
+//                    print("\(document.documentID) => \(document.data())")
+//                }
+//
+//                let objects: [Player] = querySnapshot!.getObjects()
+//                print("&& TYPED OBJECTS?: \(objects)")
+//            }
+//        }
+        
         return true
     }
 

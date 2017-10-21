@@ -7,21 +7,33 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5FD2E257C0D45B476CB13E3E /* Pods_Kickball_Manager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78B0830125A59E2B007B2473 /* Pods_Kickball_Manager.framework */; };
+		C410CFBD1F9AD0E2004A3B37 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C410CFBC1F9AD0E2004A3B37 /* PlayerViewController.swift */; };
+		C410CFBF1F9AD10E004A3B37 /* PlayerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C410CFBE1F9AD10E004A3B37 /* PlayerCell.swift */; };
 		C427F0F31F9AA7CC00A7A8A2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C427F0F21F9AA7CC00A7A8A2 /* AppDelegate.swift */; };
 		C427F0F51F9AA7CC00A7A8A2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C427F0F41F9AA7CC00A7A8A2 /* ViewController.swift */; };
-		C427F0F81F9AA7CD00A7A8A2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C427F0F61F9AA7CD00A7A8A2 /* Main.storyboard */; };
 		C427F0FA1F9AA7CD00A7A8A2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C427F0F91F9AA7CD00A7A8A2 /* Assets.xcassets */; };
 		C427F0FD1F9AA7CD00A7A8A2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C427F0FB1F9AA7CD00A7A8A2 /* LaunchScreen.storyboard */; };
+		C427F1051F9AAB8F00A7A8A2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C427F1041F9AAB8F00A7A8A2 /* GoogleService-Info.plist */; };
+		C427F1071F9AB6AA00A7A8A2 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = C427F1061F9AB6AA00A7A8A2 /* Player.swift */; };
+		C427F1091F9AB7C900A7A8A2 /* FirestoreHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C427F1081F9AB7C900A7A8A2 /* FirestoreHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2FF6866463817F421655F9D7 /* Pods-Kickball Manager.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kickball Manager.release.xcconfig"; path = "Pods/Target Support Files/Pods-Kickball Manager/Pods-Kickball Manager.release.xcconfig"; sourceTree = "<group>"; };
+		78B0830125A59E2B007B2473 /* Pods_Kickball_Manager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Kickball_Manager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1BE6C696517C418B7A2C620 /* Pods-Kickball Manager.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kickball Manager.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Kickball Manager/Pods-Kickball Manager.debug.xcconfig"; sourceTree = "<group>"; };
+		C410CFBC1F9AD0E2004A3B37 /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
+		C410CFBE1F9AD10E004A3B37 /* PlayerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerCell.swift; sourceTree = "<group>"; };
 		C427F0EF1F9AA7CC00A7A8A2 /* Kickball Manager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Kickball Manager.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C427F0F21F9AA7CC00A7A8A2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C427F0F41F9AA7CC00A7A8A2 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		C427F0F71F9AA7CD00A7A8A2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C427F0F91F9AA7CD00A7A8A2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C427F0FC1F9AA7CD00A7A8A2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C427F0FE1F9AA7CD00A7A8A2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C427F1041F9AAB8F00A7A8A2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		C427F1061F9AB6AA00A7A8A2 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		C427F1081F9AB7C900A7A8A2 /* FirestoreHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,17 +41,37 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5FD2E257C0D45B476CB13E3E /* Pods_Kickball_Manager.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		03BBD953172AA91379B79F1D /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				A1BE6C696517C418B7A2C620 /* Pods-Kickball Manager.debug.xcconfig */,
+				2FF6866463817F421655F9D7 /* Pods-Kickball Manager.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		305044F6287646154D4E87DB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				78B0830125A59E2B007B2473 /* Pods_Kickball_Manager.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		C427F0E61F9AA7CC00A7A8A2 = {
 			isa = PBXGroup;
 			children = (
 				C427F0F11F9AA7CC00A7A8A2 /* Kickball Manager */,
 				C427F0F01F9AA7CC00A7A8A2 /* Products */,
+				03BBD953172AA91379B79F1D /* Pods */,
+				305044F6287646154D4E87DB /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -54,12 +86,16 @@
 		C427F0F11F9AA7CC00A7A8A2 /* Kickball Manager */ = {
 			isa = PBXGroup;
 			children = (
+				C427F1041F9AAB8F00A7A8A2 /* GoogleService-Info.plist */,
 				C427F0F21F9AA7CC00A7A8A2 /* AppDelegate.swift */,
 				C427F0F41F9AA7CC00A7A8A2 /* ViewController.swift */,
-				C427F0F61F9AA7CD00A7A8A2 /* Main.storyboard */,
 				C427F0F91F9AA7CD00A7A8A2 /* Assets.xcassets */,
 				C427F0FB1F9AA7CD00A7A8A2 /* LaunchScreen.storyboard */,
 				C427F0FE1F9AA7CD00A7A8A2 /* Info.plist */,
+				C427F1061F9AB6AA00A7A8A2 /* Player.swift */,
+				C427F1081F9AB7C900A7A8A2 /* FirestoreHelper.swift */,
+				C410CFBC1F9AD0E2004A3B37 /* PlayerViewController.swift */,
+				C410CFBE1F9AD10E004A3B37 /* PlayerCell.swift */,
 			);
 			path = "Kickball Manager";
 			sourceTree = "<group>";
@@ -71,9 +107,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C427F1011F9AA7CD00A7A8A2 /* Build configuration list for PBXNativeTarget "Kickball Manager" */;
 			buildPhases = (
+				FDDEDE7DDD3DD75DA1121938 /* [CP] Check Pods Manifest.lock */,
 				C427F0EB1F9AA7CC00A7A8A2 /* Sources */,
 				C427F0EC1F9AA7CC00A7A8A2 /* Frameworks */,
 				C427F0ED1F9AA7CC00A7A8A2 /* Resources */,
+				D3B89FC20B9ADD047B26C15B /* [CP] Embed Pods Frameworks */,
+				C37505740158DD015093FED3 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -124,34 +163,78 @@
 			buildActionMask = 2147483647;
 			files = (
 				C427F0FD1F9AA7CD00A7A8A2 /* LaunchScreen.storyboard in Resources */,
+				C427F1051F9AAB8F00A7A8A2 /* GoogleService-Info.plist in Resources */,
 				C427F0FA1F9AA7CD00A7A8A2 /* Assets.xcassets in Resources */,
-				C427F0F81F9AA7CD00A7A8A2 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		C37505740158DD015093FED3 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Kickball Manager/Pods-Kickball Manager-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D3B89FC20B9ADD047B26C15B /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Kickball Manager/Pods-Kickball Manager-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FDDEDE7DDD3DD75DA1121938 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		C427F0EB1F9AA7CC00A7A8A2 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C410CFBF1F9AD10E004A3B37 /* PlayerCell.swift in Sources */,
 				C427F0F51F9AA7CC00A7A8A2 /* ViewController.swift in Sources */,
+				C427F1071F9AB6AA00A7A8A2 /* Player.swift in Sources */,
 				C427F0F31F9AA7CC00A7A8A2 /* AppDelegate.swift in Sources */,
+				C427F1091F9AB7C900A7A8A2 /* FirestoreHelper.swift in Sources */,
+				C410CFBD1F9AD0E2004A3B37 /* PlayerViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		C427F0F61F9AA7CD00A7A8A2 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				C427F0F71F9AA7CD00A7A8A2 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		C427F0FB1F9AA7CD00A7A8A2 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -272,13 +355,14 @@
 		};
 		C427F1021F9AA7CD00A7A8A2 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A1BE6C696517C418B7A2C620 /* Pods-Kickball Manager.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = S652846XU2;
+				DEVELOPMENT_TEAM = BC5GKF3W79;
 				INFOPLIST_FILE = "Kickball Manager/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.sdot.Kickball-Manager";
+				PRODUCT_BUNDLE_IDENTIFIER = com.sdot.kickballManager;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -287,13 +371,14 @@
 		};
 		C427F1031F9AA7CD00A7A8A2 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2FF6866463817F421655F9D7 /* Pods-Kickball Manager.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = S652846XU2;
+				DEVELOPMENT_TEAM = BC5GKF3W79;
 				INFOPLIST_FILE = "Kickball Manager/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.sdot.Kickball-Manager";
+				PRODUCT_BUNDLE_IDENTIFIER = com.sdot.kickballManager;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

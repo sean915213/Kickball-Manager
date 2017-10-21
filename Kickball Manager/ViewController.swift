@@ -12,7 +12,15 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        let label = UILabel()
+        label.text = "LABEL TEXT"
+        label.adjustsFontForContentSizeCategory = true
+        label.font = UIFont.preferredFont(forTextStyle: .headline)
+        label.sizeToFit()
+        
+        label.center = view.center
+        view.addSubview(label)
     }
 
     override func didReceiveMemoryWarning() {
