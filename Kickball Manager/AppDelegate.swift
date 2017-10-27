@@ -8,20 +8,30 @@
 
 import UIKit
 import Firebase
+import FirebaseAuthUI
+import FirebaseGoogleAuthUI
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
 
     var window: UIWindow? = {
         let win = UIWindow(frame: UIScreen.main.bounds)
         win.backgroundColor = UIColor.white
-        win.makeKeyAndVisible()
+//        win.makeKeyAndVisible()
         return win
     }()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        
-        window!.rootViewController = ViewController()
+        // Configure Firebase
+        FirebaseApp.configure()
+        // Check for authorized user
+        if let user = FUIAuth.defaultAuthUI()?.auth!.currentUser {
+            print("&& USER EXISTS: \(user.displayName)")
+            window!.rootViewController = PlayerViewController()
+            window!.makeKeyAndVisible()
+        } else {
+            performSignIn()
+        }
         
 //        let defaultStore = FirestoreHelper.store
         
@@ -79,7 +89,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-
-
+    
+    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any]) -> Bool {
+        let sourceApplication = options[UIApplicationOpenURLOptionsKey.sourceApplication] as! String?
+        if FUIAuth.defaultAuthUI()?.handleOpen(url, sourceApplication: sourceApplication) ?? false {
+            return true
+        }
+        // other URL handling goes here.
+        return false
+    }
+    
+    // MARK: Other Logic
+    
+    private func performSignIn() {
+        // Setup Auth
+        let authUI = FUIAuth.defaultAuthUI()
+        authUI!.delegate = self
+        // Assign providers
+        let providers: [FUIAuthProvider] = [ FUIGoogleAuth() ]
+        authUI!.providers = providers
+        // Present controller
+        let authViewController = authUI!.authViewController()
+        window!.rootViewController = authViewController
+        window!.makeKeyAndVisible()
+    }
+    
+    // MARK: FirebaseAuthUI Delegate Implementation
+    
+    func authUI(_ authUI: FUIAuth, didSignInWith user: User?, error: Error?) {
+        print("&& AUTH SIGNED IN WITH USER: \(user), ERROR: \(error)")
+    }
 }
 

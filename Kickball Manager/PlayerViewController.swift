@@ -7,56 +7,76 @@
 //
 
 import UIKit
+import SGYSwiftUtility
+import Firebase
 
-private let reuseIdentifier = "Cell"
-
-class PlayerViewController: UICollectionViewController {
+class PlayerViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+    
+    // MARK: - Initialization
+    
+    init() {
+        super.init(collectionViewLayout: flowLayout)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Properties
+    
+    private var players = [Player]()
+    
+    private let flowLayout: UICollectionViewFlowLayout = {
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumLineSpacing = 5
+        layout.minimumInteritemSpacing = 5
+        layout.sectionInset = UIEdgeInsets(top: 10, left: 5, bottom: 10, right: 5)
+        return layout
+    }()
+    
+    // MARK: - Methods
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
+        collectionView!.backgroundColor = .white
         // Register cell classes
-        self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        collectionView!.register(PlayerCell.self, forCellWithReuseIdentifier: PlayerCell.reuseId)
+        loadPlayers()
+        resizeCollectionView()
+    }
+    
+    private func loadPlayers() {
+        Firestore.firestore().collection("users").getDocuments() { (querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+            } else {
+                self.players.append(contentsOf: querySnapshot!.getObjects())
+                print("&& TYPED OBJECTS?: \(self.players)")
+                self.collectionView!.reloadData()
+            }
+        }
 
-        // Do any additional setup after loading the view.
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    private func resizeCollectionView() {
+        let availWidth = collectionView!.bounds.width - (flowLayout.sectionInset.left + flowLayout.sectionInset.right)
+        flowLayout.itemSize = CGSize(width: availWidth, height: 50)
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
-    }
-    */
 
     // MARK: UICollectionViewDataSource
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of items
-        return 0
+        return players.count
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
-    
-        // Configure the cell
-    
+        let cell: PlayerCell = collectionView.dequeueReusableCell(withReuseIdentifier: PlayerCell.reuseId, for: indexPath)
+        cell.player = players[indexPath.row]
         return cell
     }
 

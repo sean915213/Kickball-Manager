@@ -5,6 +5,9 @@ PODS:
   - BoringSSL/Implementation (9.0):
     - BoringSSL/Interface (= 9.0)
   - BoringSSL/Interface (9.0)
+  - Firebase/Auth (4.4.0):
+    - Firebase/Core
+    - FirebaseAuth (= 4.3.0)
   - Firebase/Core (4.4.0):
     - FirebaseAnalytics (= 4.0.4)
     - FirebaseCore (= 4.0.9)
@@ -31,6 +34,16 @@ PODS:
     - leveldb-library (~> 1.18)
     - Protobuf (~> 3.1)
   - FirebaseInstanceID (2.0.5)
+  - FirebaseUI/Auth (4.5.0):
+    - Firebase/Auth (~> 4.2)
+  - FirebaseUI/Google (4.5.0):
+    - FirebaseUI/Auth
+    - GoogleSignIn (~> 4.0)
+  - GoogleSignIn (4.1.1):
+    - GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)
+    - GoogleToolboxForMac/NSString+URLArguments (~> 2.1)
+    - GTMOAuth2 (~> 1.0)
+    - GTMSessionFetcher/Core (~> 1.1)
   - GoogleToolboxForMac/DebugUtils (2.1.3):
     - GoogleToolboxForMac/Defines (= 2.1.3)
   - GoogleToolboxForMac/Defines (2.1.3)
@@ -57,7 +70,13 @@ PODS:
     - gRPC-RxLibrary (= 1.6.5)
     - Protobuf (~> 3.0)
   - gRPC-RxLibrary (1.6.5)
+  - GTMOAuth2 (1.1.5):
+    - GTMSessionFetcher (~> 1.1)
+  - GTMSessionFetcher (1.1.12):
+    - GTMSessionFetcher/Full (= 1.1.12)
   - GTMSessionFetcher/Core (1.1.12)
+  - GTMSessionFetcher/Full (1.1.12):
+    - GTMSessionFetcher/Core (= 1.1.12)
   - leveldb-library (1.18.3)
   - nanopb (0.3.8):
     - nanopb/decode (= 0.3.8)
@@ -65,10 +84,23 @@ PODS:
   - nanopb/decode (0.3.8)
   - nanopb/encode (0.3.8)
   - Protobuf (3.4.0)
+  - SGYSwiftUtility (0.1.0)
 
 DEPENDENCIES:
   - Firebase/Core
   - Firebase/Firestore
+  - FirebaseUI/Auth
+  - FirebaseUI/Google
+  - SGYSwiftUtility (from `https://github.com/sean915213/SGYSwiftUtility.git`)
+
+EXTERNAL SOURCES:
+  SGYSwiftUtility:
+    :git: https://github.com/sean915213/SGYSwiftUtility.git
+
+CHECKOUT OPTIONS:
+  SGYSwiftUtility:
+    :commit: ade75d2dbc5e41af448dde3c9e7903502b3190ef
+    :git: https://github.com/sean915213/SGYSwiftUtility.git
 
 SPEC CHECKSUMS:
   BoringSSL: 19083b821ef3ae0f758fae15482e183003b1e265
@@ -78,16 +110,20 @@ SPEC CHECKSUMS:
   FirebaseCore: ebe73f64302705e693b1de9919a76edbdd17a19d
   FirebaseFirestore: ad1096ea647a8cc60ead57f7c54f5225d54fbd76
   FirebaseInstanceID: f2b688c66b972f30d7fa9f5f9f91455454a03b47
+  FirebaseUI: 883482fea73b73bbb488c55176f4c6ad128957eb
+  GoogleSignIn: 3fdaa34a2ba04dbd7a25d7db39aecb0da98d5bdc
   GoogleToolboxForMac: 2501e2ad72a52eb3dfe7bd9aee7dad11b858bd20
   gRPC: 42f915ce322b1abc5241621acc776f2fdb0a2039
   gRPC-Core: 54211a073d238ec8569be06e1a939a72f081a3e9
   gRPC-ProtoRPC: 4299db62f86df58c88844ccb50f5c48993e704f6
   gRPC-RxLibrary: 1b1c9c9cf666709ad7714cb0e0f3c44dc0cbfb0b
+  GTMOAuth2: be83fd28d63ae3087e7d351b1f39c1a7e24ab6e7
   GTMSessionFetcher: ebaa1f79a5366922c1735f1566901f50beba23b7
   leveldb-library: 10fb39c39e243db4af1828441162405bbcec1404
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   Protobuf: 03eef2ee0b674770735cf79d9c4d3659cf6908e8
+  SGYSwiftUtility: ac059df59d20016207619adf2b67bb739b6be4fd
 
-PODFILE CHECKSUM: 7fc89eb8e07dcd8dc39cc0a8daa2da449cf9142a
+PODFILE CHECKSUM: 3abd860f63d09617ae96619da512a338dd61d96e
 
-COCOAPODS: 1.2.1
+COCOAPODS: 1.3.1

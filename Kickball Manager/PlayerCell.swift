@@ -7,20 +7,33 @@
 //
 
 import UIKit
+import SGYSwiftUtility
 
 class PlayerCell: UICollectionViewCell {
     
+    static let reuseId = "com.sdot.kickballManager.playerCell"
+    
     // MARK: - Initialization
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupCell()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: - Properties
     
     var player: Player? {
-        didSet { }
+        didSet {
+            if let p = player { configure(with: p) }
+        }
     }
     
     private let nameLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
+        let label = UILabel(translatesAutoresizingMask: false)
         label.font = UIFont.preferredFont(forTextStyle: .headline)
         return label
     }()
@@ -29,9 +42,7 @@ class PlayerCell: UICollectionViewCell {
     
     private func setupCell() {
         contentView.addSubview(nameLabel)
-        
-        // TODO: BRING IN TEH UTILITIES VIA TEH PODS
-        
+        NSLayoutConstraint.constraintsPinningView(nameLabel, toMargins: true).activate()
     }
     
     private func configure(with player: Player) {

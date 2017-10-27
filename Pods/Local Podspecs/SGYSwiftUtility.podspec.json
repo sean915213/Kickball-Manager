@@ -1,0 +1,22 @@
+{
+  "name": "SGYSwiftUtility",
+  "version": "0.1.0",
+  "summary": "A short description of SGYSwiftUtility.",
+  "description": "A basic library of utility functions I've developed for my own personal use.  This library frequently changes as the shortcut methods implemented are often incorporated into the Swift framework (especially as more framework imported functions implement generics properly).",
+  "homepage": "https://github.com/sean915213/SGYSwiftUtility",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "Sean G. Young": "sean.g.young@gmail.com"
+  },
+  "source": {
+    "git": "https://github.com/sean915213/SGYSwiftUtility.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.3"
+  },
+  "source_files": "SGYSwiftUtility/Classes/**/*"
+}

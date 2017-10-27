@@ -1,0 +1,6 @@
+framework module SGYSwiftUtility {
+  umbrella header "SGYSwiftUtility-umbrella.h"
+
+  export *
+  module * { export * }
+}

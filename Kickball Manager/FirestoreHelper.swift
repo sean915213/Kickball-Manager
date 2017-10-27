@@ -12,28 +12,28 @@ import Firebase
 private let encoder = JSONEncoder()
 private let decoder = JSONDecoder()
 
-final class FirestoreHelper {
-    
-    // MARK: - Static
-    
-    private static let instance: FirestoreHelper = {
-        return FirestoreHelper()
-    }()
-    
-    static var store: Firestore {
-        return instance.store
-    }
-    
-    // MARK: - Instance
-    
-    private init() {
-        FirebaseApp.configure()
-    }
-    
-    private var store: Firestore {
-        return Firestore.firestore()
-    }
-}
+//final class FirestoreHelper {
+//
+//    // MARK: - Static
+//
+//    private static let instance: FirestoreHelper = {
+//        return FirestoreHelper()
+//    }()
+//
+//    static var store: Firestore {
+//        return instance.store
+//    }
+//
+//    // MARK: - Instance
+//
+//    private init() {
+//        FirebaseApp.configure()
+//    }
+//
+//    private var store: Firestore {
+//        return Firestore.firestore()
+//    }
+//}
 
 extension CollectionReference {
     
