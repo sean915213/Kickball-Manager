@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import FirebaseAuthUI
 import FirebaseGoogleAuthUI
+import SGYSwiftUtility
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
@@ -20,15 +21,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
 //        win.makeKeyAndVisible()
         return win
     }()
+    
+    private let logger = Logger(source: "AppDelegate")
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Configure Firebase
         FirebaseApp.configure()
         // Check for authorized user
         if let user = FUIAuth.defaultAuthUI()?.auth!.currentUser {
-            print("&& USER EXISTS: \(user.displayName)")
-            window!.rootViewController = PlayerViewController()
-            window!.makeKeyAndVisible()
+            // Continue
+            continueAuth(with: user)
+            
+//            print("&& USER EXISTS: \(user.displayName), EMAIL: \(user.email)")
+//            window!.rootViewController = PlayerViewController()
+//            window!.makeKeyAndVisible()
         } else {
             performSignIn()
         }
@@ -101,6 +107,65 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
     
     // MARK: Other Logic
     
+    private func proceed(with user: KMUser) {
+        print("&& GOT TO PROCEED WITH USER: \(user)")
+        let controller = PlayerViewController(user: user)
+        show(controller: controller)
+    }
+    
+    private func show(controller: UIViewController) {
+        window!.rootViewController = controller
+        window!.makeKeyAndVisible()
+    }
+    
+    // MARK: Auth Logic
+    
+    private func continueAuth(with user: User) {
+        // Get user's document
+        KMUser.firCollection.document(user.uid).getDocument(completion: { (document, error) in
+            guard document?.exists == true else {
+                // Create
+                self.logger.logInfo("New Firebase user [\(user.uid)] not found. Creating.")
+                self.createNativeUser(for: user)
+                return
+            }
+            // Proceed with launch
+            self.proceed(with: KMUser(firToken: user.uid))
+        })
+        
+//        // Get user's Firebase identifying token
+//        user.getIDToken(completion: { (token, error) in
+//            guard let token = token else {
+//                // TODO: SIGN OUT?
+//                print("&& FAILED TO GET TOKEN WITH ERROR: \(error)")
+//                fatalError("Handle this")
+//            }
+//            // Retrieve user document
+//            Firestore.firestore().collection("users").document(token).getDocument(completion: { (document, error) in
+//                guard document?.exists == true else {
+//                    // Create
+//                    self.logger.logInfo("New Firebase user [\(user.email ?? "<no email>")] not found. Creating.")
+//                    self.createNativeUser(with: token)
+//                    return
+//                }
+//                // Proceed with launch
+//                self.proceed(with: KMUser(firToken: token))
+//            })
+//        })
+    }
+    
+    private func createNativeUser(for firUser: User) {
+        // Create document
+        KMUser.firCollection.document(firUser.uid).setData([:]) { (error) in
+            if let error = error {
+                fatalError("HANDLE THIS: \(error)")
+            }
+            // Proceed
+            self.proceed(with: KMUser(firToken: firUser.uid))
+        }
+    }
+    
+    
     private func performSignIn() {
         // Setup Auth
         let authUI = FUIAuth.defaultAuthUI()
@@ -110,14 +175,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
         authUI!.providers = providers
         // Present controller
         let authViewController = authUI!.authViewController()
-        window!.rootViewController = authViewController
-        window!.makeKeyAndVisible()
+        show(controller: authViewController)
     }
     
     // MARK: FirebaseAuthUI Delegate Implementation
     
     func authUI(_ authUI: FUIAuth, didSignInWith user: User?, error: Error?) {
         print("&& AUTH SIGNED IN WITH USER: \(user), ERROR: \(error)")
+        guard let user = user else {
+            // TODO: Show alert? Retry?
+            fatalError("HANDLE THIS: \(error)")
+        }
+        // Continue through auth pipeline
+        continueAuth(with: user)
     }
 }
 

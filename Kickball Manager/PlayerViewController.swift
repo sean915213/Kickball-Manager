@@ -9,13 +9,15 @@
 import UIKit
 import SGYSwiftUtility
 import Firebase
+import ContactsUI
 
-class PlayerViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+class PlayerViewController: UITableViewController, CNContactPickerDelegate {
     
     // MARK: - Initialization
     
-    init() {
-        super.init(collectionViewLayout: flowLayout)
+    init(user: KMUser) {
+        self.user = user
+        super.init(style: .plain)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -24,91 +26,117 @@ class PlayerViewController: UICollectionViewController, UICollectionViewDelegate
     
     // MARK: - Properties
     
+    private let user: KMUser
+    
     private var players = [Player]()
     
-    private let flowLayout: UICollectionViewFlowLayout = {
-        let layout = UICollectionViewFlowLayout()
-        layout.minimumLineSpacing = 5
-        layout.minimumInteritemSpacing = 5
-        layout.sectionInset = UIEdgeInsets(top: 10, left: 5, bottom: 10, right: 5)
-        return layout
-    }()
+    private lazy var logger = Logger(source: "PlayerViewController")
     
     // MARK: - Methods
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        collectionView!.backgroundColor = .white
+        tableView.backgroundColor = .white
         // Register cell classes
-        collectionView!.register(PlayerCell.self, forCellWithReuseIdentifier: PlayerCell.reuseId)
+        tableView.register(PlayerCell.self, forCellReuseIdentifier: PlayerCell.reuseId)
         loadPlayers()
-        resizeCollectionView()
+        addToolbar()
     }
     
     private func loadPlayers() {
-        Firestore.firestore().collection("users").getDocuments() { (querySnapshot, err) in
-            if let err = err {
-                print("Error getting documents: \(err)")
-            } else {
-                self.players.append(contentsOf: querySnapshot!.getObjects())
-                print("&& TYPED OBJECTS?: \(self.players)")
-                self.collectionView!.reloadData()
+        user.getPlayers { (players, error) in
+            
+            print("&& GOT PLAYERS: \(players)")
+            
+            // Check
+            guard let players = players else {
+                // TODO: HANDLE THIS
+                fatalError("Handle this: \(error)")
+            }
+            self.players.append(contentsOf: players)
+            self.tableView.reloadData()
+        }
+    }
+    
+    private func addToolbar() {
+        let toolbar = UIToolbar(translatesAutoresizingMask: true)
+        
+        // Add and constrain
+//        view.addSubview(toolbar)
+//        NSLayoutConstraint.constraintsPinningView(toolbar, axis: .horizontal).activate()
+//        toolbar.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        
+        tableView.tableFooterView = toolbar
+        
+        // Add button
+        let add = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(pressedAdd))
+        toolbar.setItems([add], animated: true)
+        
+        toolbar.sizeToFit()
+    }
+    
+    // MARK: Actions
+    
+    @objc func pressedAdd() {
+        let controller = CNContactPickerViewController()
+        controller.delegate = self
+        present(controller, animated: true, completion: nil)
+    }
+    
+    // CNContactPicker Delegate
+    
+//    func contactPicker(_ picker: CNContactPickerViewController, didSelect contact: CNContact) {
+//        print("&& SELECTED: \(contact)")
+//    }
+    
+//    func contactPicker(_ picker: CNContactPickerViewController, didSelect contactProperty: CNContactProperty) {
+//        print("&& SELECTED PROP: \(contactProperty)")
+//    }
+    
+    func contactPicker(_ picker: CNContactPickerViewController, didSelect contacts: [CNContact]) {
+        guard !contacts.isEmpty else { return }
+        // Create players
+        let newPlayers = contacts.map { Player(contact: $0) }
+        // Add to collection and reload
+        players.append(contentsOf: newPlayers)
+        tableView.reloadData()
+        // Add in Firebase
+        for player in newPlayers {
+            do {
+                let (newPlayer, _) = try user.firPlayersCollection.addDocument(object: player, completion: { (error) in
+                    guard let error = error else { return }
+                    fatalError("HANDLE THIS: \(error)")
+                })
+                self.logger.logInfo("Saving player w/ identifier: \(newPlayer.firID!).")
+            } catch let error as NSError {
+                fatalError("HANDLE THIS: \(error)")
             }
         }
-
+    }
+    
+    func contactPicker(_ picker: CNContactPickerViewController, didSelectContactProperties contactProperties: [CNContactProperty]) {
+        print("&& SELECTED MULTI PROP: \(contactProperties)")
     }
 
-    private func resizeCollectionView() {
-        let availWidth = collectionView!.bounds.width - (flowLayout.sectionInset.left + flowLayout.sectionInset.right)
-        flowLayout.itemSize = CGSize(width: availWidth, height: 50)
-    }
+    // MARK: UITableView DataSource
 
-    // MARK: UICollectionViewDataSource
-
-    override func numberOfSections(in collectionView: UICollectionView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return players.count
     }
-
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell: PlayerCell = collectionView.dequeueReusableCell(withReuseIdentifier: PlayerCell.reuseId, for: indexPath)
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell: PlayerCell = tableView.dequeueReusableCell(withIdentifier: PlayerCell.reuseId, for: indexPath)
         cell.player = players[indexPath.row]
         return cell
     }
-
-    // MARK: UICollectionViewDelegate
-
-    /*
-    // Uncomment this method to specify if the specified item should be highlighted during tracking
-    override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    */
-
-    /*
-    // Uncomment this method to specify if the specified item should be selected
-    override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    */
-
-    /*
-    // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
-    override func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
     
+    // MARK: UITableView Delegate
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // DO SOMETHING
     }
-    */
-
 }

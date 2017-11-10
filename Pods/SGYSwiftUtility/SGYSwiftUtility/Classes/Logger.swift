@@ -10,7 +10,7 @@ import Foundation
 public typealias LoggingBlock = (String) -> Void
 
 // Defaults
-fileprivate let defaultLogFormat = "[\(Logger.FormatPlaceholder.sourceName)] \(Logger.FormatPlaceholder.level) - \(Logger.FormatPlaceholder.value)"
+fileprivate let defaultLogFormat = "[\(Logger.FormatPlaceholder.sourceName.rawValue)] \(Logger.FormatPlaceholder.level.rawValue) - \(Logger.FormatPlaceholder.value.rawValue)"
 fileprivate let defaultLogBlock: LoggingBlock = { NSLog($0) }
 
 /**
@@ -28,22 +28,18 @@ public class Logger {
      - warning: A warning log.  Denotes an issue that can be recovered from, but should be noted as it is likely not functioning properly.
      - error: An error log.  Denotes a crtitical error that may or may not be recovered from and should be addressed immediately.
      */
-    public enum Level: String, CustomStringConvertible {
+    public enum Level: String {
         case debug = "Debug",
         info = "Info",
         warning = "Warning",
         error = "Error"
-        
-        public var description: String { return rawValue }
     }
     
     
-    public enum FormatPlaceholder: String, CustomStringConvertible {
+    public enum FormatPlaceholder: String {
         case sourceName = "$context",
         level = "$logLevel",
         value = "$logValue"
-        
-        public var description: String { return rawValue }
     }
     
     
@@ -56,26 +52,26 @@ public class Logger {
      
      :returns: An instance of the SerialLogger class.
      */
-    public convenience init(sourceName: String) {
+    public convenience init(source: String) {
         // Use default log format
-        self.init(sourceName: sourceName, logFormat: defaultLogFormat, logBlock: defaultLogBlock)
+        self.init(source: source, logFormat: defaultLogFormat, logBlock: defaultLogBlock)
     }
     
-    public convenience init(sourceName: String, logBlock: @escaping LoggingBlock) {
+    public convenience init(source: String, logBlock: @escaping LoggingBlock) {
         // Use default log format
-        self.init(sourceName: sourceName, logFormat: defaultLogFormat, logBlock: logBlock)
+        self.init(source: source, logFormat: defaultLogFormat, logBlock: logBlock)
     }
     
-    public init(sourceName: String, logFormat: String, logBlock: @escaping LoggingBlock) {
+    public init(source: String, logFormat: String, logBlock: @escaping LoggingBlock) {
+        self.source = source
         self.logFormat = logFormat
-        self.sourceName = sourceName
         self.logBlock = logBlock
     }
     
     // MARK: - Properties
     
     /// The description prefixed to logs.  Assigned on initialization.
-    public var sourceName: String
+    public var source: String
     /// The format used to create the final logging string.
     public let logFormat: String
     /// The block used to perform actual logging action.
@@ -90,12 +86,10 @@ public class Logger {
      :param: level       The log level to display.
      */
     public func log(_ description: String, level: Level = .debug) {
-        
         // Create log description by replacing placeholders w/ their respective values
-        var log = logFormat.replacingOccurrences(of: FormatPlaceholder.sourceName.rawValue, with: sourceName)
+        var log = logFormat.replacingOccurrences(of: FormatPlaceholder.sourceName.rawValue, with: source)
         log = log.replacingOccurrences(of: FormatPlaceholder.level.rawValue, with: level.rawValue)
         log = log.replacingOccurrences(of: FormatPlaceholder.value.rawValue, with: description)
-        
         // Log it
         logBlock(log)
     }

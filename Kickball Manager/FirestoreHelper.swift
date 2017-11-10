@@ -12,54 +12,78 @@ import Firebase
 private let encoder = JSONEncoder()
 private let decoder = JSONDecoder()
 
-//final class FirestoreHelper {
-//
-//    // MARK: - Static
-//
-//    private static let instance: FirestoreHelper = {
-//        return FirestoreHelper()
-//    }()
-//
-//    static var store: Firestore {
-//        return instance.store
-//    }
-//
-//    // MARK: - Instance
-//
-//    private init() {
-//        FirebaseApp.configure()
-//    }
-//
-//    private var store: Firestore {
-//        return Firestore.firestore()
-//    }
-//}
+protocol FirebaseTokenProtocol {
+    var firID: String? { get set }
+}
+
+typealias FirEncodable = Encodable & FirebaseTokenProtocol
+typealias FirDecodable = Decodable & FirebaseTokenProtocol
+typealias FirCodable = Codable & FirebaseTokenProtocol
 
 extension CollectionReference {
     
-    func addDocument<T: Encodable>(object: T, completion: ((Error?) -> Void)? = nil) -> DocumentReference {
+    func getObjects<T: FirDecodable>(completion: @escaping ([T]?, QuerySnapshot?, Error?) -> Void) {
+        getDocuments { (query, error)  in
+            guard let query = query else {
+                completion(nil, nil, error)
+                return
+            }
+            // Create objects
+            var objects = [T]()
+            // Iterate over documents
+            for document in query.documents {
+                do {
+                    guard var object: T = try document.data() else { continue }
+                    // Add object id and append
+                    object.firID = document.documentID
+                    objects.append(object)
+                } catch let coderErr as NSError {
+                    completion(objects, query, coderErr)
+                }
+            }
+            completion(objects, query, error)
+        }
+    }
+    
+    func addDocument<T: FirEncodable>(object: T, completion: ((Error?) -> Void)? = nil) throws -> (T, DocumentReference) {
+        // Technically encodable can be a struct so create mutable copy
+        var returnObject = object
         // Encode into json
-        let json = try! encoder.encode(object)
+        let json = try encoder.encode(object)
         // Decode into dictionary
-        let dict = try! JSONSerialization.jsonObject(with: json, options: []) as! [String: Any]
-        // Call add with dictionary
-        return addDocument(data: dict, completion: completion)
+        let dict = try JSONSerialization.jsonObject(with: json, options: []) as! [String: Any]
+        // Add
+        var document: DocumentReference! = nil
+        document = addDocument(data: dict, completion: completion)
+        // Assign token to object
+        returnObject.firID = document.documentID
+        // Return object and result
+        return (returnObject, document)
     }
 }
 
-extension QuerySnapshot {
+//extension QuerySnapshot {
+//
+//    func getObjects<T: Decodable>() throws -> [T] {
+//        var objects = [T]()
+//        // Iterate over documents
+//        for document in documents {
+//            // Since object is part of the returned query we do not expect it to have no data
+//            let object: T = try document.data()!
+//            objects.append(object)
+//        }
+//        return objects
+//    }
+//}
+
+extension DocumentSnapshot {
     
-    func getObjects<T: Decodable>() -> [T] {
-        var objects = [T]()
-        // Iterate over documents
-        for document in documents {
-            let data = document.data()
-            // Get json data from dictionary
-            let json = try! JSONSerialization.data(withJSONObject: data, options: [])
-            // Decode into type and add to array
-            let object = try! decoder.decode(T.self, from: json)
-            objects.append(object)
-        }
-        return objects
+    func data<T: Decodable>() throws -> T? {
+        guard exists else { return nil }
+        // Get json data from dictionary
+        let json = try JSONSerialization.data(withJSONObject: data(), options: [])
+        // Decode into type and add to array
+        return try decoder.decode(T.self, from: json)
     }
+    
 }

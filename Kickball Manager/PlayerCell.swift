@@ -9,14 +9,14 @@
 import UIKit
 import SGYSwiftUtility
 
-class PlayerCell: UICollectionViewCell {
+class PlayerCell: UITableViewCell {
     
     static let reuseId = "com.sdot.kickballManager.playerCell"
     
     // MARK: - Initialization
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupCell()
     }
     

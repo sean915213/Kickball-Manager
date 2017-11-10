@@ -13,7 +13,7 @@ open class SGYOperation: Operation {
     // MARK: - Initialization
     
     public override init() {
-        logger = Logger(sourceName: NSStringFromClass(type(of: self)))
+        logger = Logger(source: NSStringFromClass(type(of: self)))
         super.init()
     }
     
