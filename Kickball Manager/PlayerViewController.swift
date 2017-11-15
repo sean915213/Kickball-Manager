@@ -11,6 +11,10 @@ import SGYSwiftUtility
 import Firebase
 import ContactsUI
 
+protocol PlayerControllerDelegate: AnyObject {
+    func playerController(_ controller: PlayerViewController, selected: Player)
+}
+
 class PlayerViewController: UITableViewController, CNContactPickerDelegate {
     
     // MARK: - Initialization
@@ -26,7 +30,8 @@ class PlayerViewController: UITableViewController, CNContactPickerDelegate {
     
     // MARK: - Properties
     
-    private let user: KMUser
+    let user: KMUser
+    var delegate: PlayerControllerDelegate?
     
     private var players = [Player]()
     
@@ -45,14 +50,16 @@ class PlayerViewController: UITableViewController, CNContactPickerDelegate {
     
     private func loadPlayers() {
         user.getPlayers { (players, error) in
-            
-            print("&& GOT PLAYERS: \(players)")
-            
             // Check
             guard let players = players else {
                 // TODO: HANDLE THIS
                 fatalError("Handle this: \(error)")
             }
+            
+            for p in players {
+                print("&& ADDING PLAYER: \(p.firPath)")
+            }
+            
             self.players.append(contentsOf: players)
             self.tableView.reloadData()
         }
@@ -97,17 +104,17 @@ class PlayerViewController: UITableViewController, CNContactPickerDelegate {
         guard !contacts.isEmpty else { return }
         // Create players
         let newPlayers = contacts.map { Player(contact: $0) }
-        // Add to collection and reload
-        players.append(contentsOf: newPlayers)
-        tableView.reloadData()
         // Add in Firebase
         for player in newPlayers {
             do {
-                let (newPlayer, _) = try user.firPlayersCollection.addDocument(object: player, completion: { (error) in
+                let newPlayer = try user.firPlayersCollection.addDocument(object: player, completion: { (error) in
                     guard let error = error else { return }
                     fatalError("HANDLE THIS: \(error)")
                 })
-                self.logger.logInfo("Saving player w/ identifier: \(newPlayer.firID!).")
+                // To existing collection and reload
+                players.append(newPlayer)
+                tableView.reloadData()
+                self.logger.logInfo("Saving player at: \(newPlayer.firPath!).")
             } catch let error as NSError {
                 fatalError("HANDLE THIS: \(error)")
             }
@@ -128,6 +135,26 @@ class PlayerViewController: UITableViewController, CNContactPickerDelegate {
         return players.count
     }
     
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        guard editingStyle == .delete else { return }
+        let player = players[indexPath.row]
+        // Remove entry
+        players.remove(at: indexPath.row)
+        tableView.beginUpdates()
+        tableView.deleteRows(at: [indexPath], with: .automatic)
+        tableView.endUpdates()
+        // Remove from db
+        player.firDocument!.delete { (error) in
+            guard let error = error else { return }
+            self.logger.logWarning("Error deleting player [\(player.firPath!)]: \(error)")
+            // Add to collection again
+            self.players.append(player)
+            self.tableView.beginUpdates()
+            self.tableView.insertRows(at: [IndexPath(row: self.players.count, section: 0)], with: .automatic)
+            self.tableView.endUpdates()
+        }
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: PlayerCell = tableView.dequeueReusableCell(withIdentifier: PlayerCell.reuseId, for: indexPath)
         cell.player = players[indexPath.row]
@@ -137,6 +164,6 @@ class PlayerViewController: UITableViewController, CNContactPickerDelegate {
     // MARK: UITableView Delegate
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // DO SOMETHING
+        delegate?.playerController(self, selected: players[indexPath.row])
     }
 }

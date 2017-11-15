@@ -31,10 +31,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
         if let user = FUIAuth.defaultAuthUI()?.auth!.currentUser {
             // Continue
             continueAuth(with: user)
-            
-//            print("&& USER EXISTS: \(user.displayName), EMAIL: \(user.email)")
-//            window!.rootViewController = PlayerViewController()
-//            window!.makeKeyAndVisible()
         } else {
             performSignIn()
         }
@@ -109,7 +105,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
     
     private func proceed(with user: KMUser) {
         print("&& GOT TO PROCEED WITH USER: \(user)")
-        let controller = PlayerViewController(user: user)
+//        let controller = PlayerViewController(user: user)
+        let team = Team(name: "New Team")
+        
+        // TODO NEED TO FILL IN
+        
+        let controller = CreateTeamController(user: user, team: team)
         show(controller: controller)
     }
     

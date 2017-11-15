@@ -34,9 +34,19 @@ extension KMUser {
         return firDocument.collection("players")
     }
     
+    var firTeamsCollection: CollectionReference {
+        return firDocument.collection("teams")
+    }
+    
     func getPlayers(completed: @escaping ([Player]?, Error?) -> Void) {
-        return firDocument.collection("players").getObjects { (players: [Player]?, query, error) in
+        return firPlayersCollection.getObjects { (players: [Player]?, query, error) in
             completed(players, error)
+        }
+    }
+    
+    func getTeams(completed: @escaping ([Team]?, Error?) -> Void) {
+        return firTeamsCollection.getObjects { (teams: [Team]?, query, error) in
+            completed(teams, error)
         }
     }
 }

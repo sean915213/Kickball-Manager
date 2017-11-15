@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		5FD2E257C0D45B476CB13E3E /* Pods_Kickball_Manager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78B0830125A59E2B007B2473 /* Pods_Kickball_Manager.framework */; };
 		74037D601FA93FEB006D8CBC /* KMUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74037D5F1FA93FEB006D8CBC /* KMUser.swift */; };
+		74C289E51FBB97370057493A /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74C289E41FBB97370057493A /* Team.swift */; };
 		74CC91531FA92C1200820E67 /* ContactsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74CC91521FA92C1200820E67 /* ContactsHelper.swift */; };
 		74F2F8AF1FB5239200D08553 /* CreateTeamController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F2F8AE1FB5239200D08553 /* CreateTeamController.swift */; };
 		C410CFBD1F9AD0E2004A3B37 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C410CFBC1F9AD0E2004A3B37 /* PlayerViewController.swift */; };
@@ -25,6 +26,7 @@
 /* Begin PBXFileReference section */
 		2FF6866463817F421655F9D7 /* Pods-Kickball Manager.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kickball Manager.release.xcconfig"; path = "Pods/Target Support Files/Pods-Kickball Manager/Pods-Kickball Manager.release.xcconfig"; sourceTree = "<group>"; };
 		74037D5F1FA93FEB006D8CBC /* KMUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KMUser.swift; sourceTree = "<group>"; };
+		74C289E41FBB97370057493A /* Team.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
 		74CC91521FA92C1200820E67 /* ContactsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsHelper.swift; sourceTree = "<group>"; };
 		74F2F8AE1FB5239200D08553 /* CreateTeamController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTeamController.swift; sourceTree = "<group>"; };
 		78B0830125A59E2B007B2473 /* Pods_Kickball_Manager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Kickball_Manager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -105,6 +107,7 @@
 				74CC91521FA92C1200820E67 /* ContactsHelper.swift */,
 				74037D5F1FA93FEB006D8CBC /* KMUser.swift */,
 				74F2F8AE1FB5239200D08553 /* CreateTeamController.swift */,
+				74C289E41FBB97370057493A /* Team.swift */,
 			);
 			path = "Kickball Manager";
 			sourceTree = "<group>";
@@ -273,6 +276,7 @@
 				C427F1071F9AB6AA00A7A8A2 /* Player.swift in Sources */,
 				C427F0F31F9AA7CC00A7A8A2 /* AppDelegate.swift in Sources */,
 				C427F1091F9AB7C900A7A8A2 /* FirestoreHelper.swift in Sources */,
+				74C289E51FBB97370057493A /* Team.swift in Sources */,
 				C410CFBD1F9AD0E2004A3B37 /* PlayerViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

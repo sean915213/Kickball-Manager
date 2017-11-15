@@ -8,6 +8,7 @@
 
 import Foundation
 import Contacts
+import Firebase
 
 class Player: FirCodable {
     
@@ -23,7 +24,7 @@ class Player: FirCodable {
     var running: Int = 0
     var kicking: Int = 0
     
-    var firID: String?
+    var firPath: String?
 }
 
 extension Player {
