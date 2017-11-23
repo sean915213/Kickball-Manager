@@ -51,7 +51,7 @@ class CreateTeamController: UITableViewController, PlayerControllerDelegate {
     func playerController(_ controller: PlayerViewController, selected player: Player) {
         dismiss(animated: true, completion: nil)
         // Add player's id
-        team.playerPaths.insert(player.firPath!)
+        team.playerPaths.insert(player.firPath)
         // Add to collection and reload
         players.append(player)
         tableView.reloadData()
@@ -60,7 +60,7 @@ class CreateTeamController: UITableViewController, PlayerControllerDelegate {
             guard let error = error else { return }
             fatalError("HANDLE ERR: \(error)")
         }
-        print("&& ADDED TO TEAM: \(team.firDocument!.documentID)")
+        print("&& ADDED TO TEAM: \(team.firDocument.documentID)")
     }
     
     // MARK: UITableView Delegate/DataSource Implementation

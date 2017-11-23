@@ -10,7 +10,7 @@ import Foundation
 import Firebase
 
 protocol FirebaseTokenProtocol {
-    var firPath: String? { get set }
+    var firPath: String { get }
 }
 
 typealias FirEncodable = Encodable & FirebaseTokenProtocol
@@ -21,7 +21,7 @@ private let encoder = JSONEncoder()
 private let decoder = JSONDecoder()
 
 enum FirError: Error {
-    case pathNotSet, documentNotFound
+    case documentNotFound
 }
 
 extension CollectionReference {
@@ -49,7 +49,7 @@ extension CollectionReference {
     
     func addObject<T: FirEncodable>(object: T, completion: ((Error?) -> Void)? = nil) throws -> DocumentReference {
         // Create reference
-        let document = Firestore.firestore().document(object.firPath!)
+        let document = Firestore.firestore().document(object.firPath)
         // Set data
         try document.setData(object: object, completion: completion)
         // Return document
@@ -74,31 +74,25 @@ extension DocumentSnapshot {
         // Get json data from dictionary
         let json = try JSONSerialization.data(withJSONObject: data(), options: [])
         // Decode into type
-        var object = try decoder.decode(T.self, from: json)
-        // Assign document path
-        object.firPath = reference.path
-        return object
+        return try decoder.decode(T.self, from: json)
     }
 }
 
 extension FirebaseTokenProtocol {
     
-    var firPathURL: URL? {
-        guard let path = firPath else { return nil }
-        return URL(string: path)!
+    var firPathURL: URL {
+        return URL(string: firPath)!
     }
     
-    var firDocument: DocumentReference? {
-        guard let path = firPath else { return nil }
-        return Firestore.firestore().document(path)
+    var firDocument: DocumentReference {
+        return Firestore.firestore().document(firPath)
     }
 }
 
 extension FirebaseTokenProtocol where Self: FirCodable {
     
     func overwrite(completion: ((Error?) -> Void)? = nil) throws {
-        guard let document = firDocument else { throw FirError.pathNotSet }
-        try document.setData(object: self, completion: completion)
+        try firDocument.setData(object: self, completion: completion)
     }
 }
 

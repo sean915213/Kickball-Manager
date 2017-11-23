@@ -13,23 +13,23 @@ class Game: FirCodable, PlayerContainer {
     
     init(number: Int, team: Team) {
         self.number = number
-        firPath = team.firPathURL!.appendingPathComponent(String(number)).absoluteString
+        firPath = team.firPathURL.appendingPathComponent(String(number)).absoluteString
     }
     
     var number: Int
     var playerPaths = Set<String>()
     
     
-    var firPath: String?
+    var firPath: String
 }
 
 extension Game {
     
-    var firKickersCollection: CollectionReference? {
-        return firDocument?.collection("kickers")
+    var firKickersCollection: CollectionReference {
+        return firDocument.collection("kickers")
     }
     
-    var firInningsCollection: CollectionReference? {
-        return firDocument?.collection("innings")
+    var firInningsCollection: CollectionReference {
+        return firDocument.collection("innings")
     }
 }

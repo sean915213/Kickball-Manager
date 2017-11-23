@@ -19,13 +19,13 @@ class Team: FirCodable, PlayerContainer {
     var name: String
     var playerPaths = Set<String>()
     
-    var firPath: String?
+    var firPath: String
 }
 
 extension Team {
     
-    var firGamesCollection: CollectionReference? {
-        return firDocument?.collection("games")
+    var firGamesCollection: CollectionReference {
+        return firDocument.collection("games")
     }
 }
 

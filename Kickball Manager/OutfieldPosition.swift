@@ -12,11 +12,11 @@ class OutfieldPosition: FirCodable {
     
     init(position: String, inning: Inning) {
         self.position = position
-        firPath = inning.firPathURL!.appendingPathComponent(position).absoluteString
+        firPath = inning.firPathURL.appendingPathComponent(position).absoluteString
     }
     
     var position: String
     var playerPath: String?
     
-    var firPath: String?
+    var firPath: String
 }

@@ -13,11 +13,11 @@ class Kicker: FirCodable, PlayerContainer {
     
     init(number: Int, game: Game) {
         self.number = number
-        firPath = game.firPathURL!.appendingPathComponent(String(number)).absoluteString
+        firPath = game.firPathURL.appendingPathComponent(String(number)).absoluteString
     }
     
     var number: Int
     var playerPaths = Set<String>()
     
-    var firPath: String?
+    var firPath: String
 }

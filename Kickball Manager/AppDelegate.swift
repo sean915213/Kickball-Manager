@@ -110,10 +110,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
             self.show(controller: controller)
         }
         
-//
-//        let team = Team(name: "NEW TEAM", owner: user)
-//        let controller = CreateTeamController(user: user, team: team)
-//        self.show(controller: controller)
+//        let team = Team(name: "NEWER TEAM", owner: user)
+//        try! user.firTeamsCollection.addObject(object: team, completion: { (error) in
+//            print("&& FINISHED CREATING TEAM W/ ERROR: \(error)")
+//        })
     }
     
     private func show(controller: UIViewController) {

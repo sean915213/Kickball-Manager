@@ -25,7 +25,7 @@ class Player: FirCodable {
     var running: Int = 0
     var kicking: Int = 0
     
-    var firPath: String?
+    var firPath: String
 }
 
 extension Player {

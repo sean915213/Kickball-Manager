@@ -114,7 +114,7 @@ class PlayerViewController: UITableViewController, CNContactPickerDelegate {
                 // To existing collection and reload
                 players.append(player)
                 tableView.reloadData()
-                self.logger.logInfo("Saving player at: \(player.firPath!).")
+                self.logger.logInfo("Saving player at: \(player.firPath).")
             } catch let error as NSError {
                 fatalError("HANDLE THIS: \(error)")
             }
@@ -144,9 +144,9 @@ class PlayerViewController: UITableViewController, CNContactPickerDelegate {
         tableView.deleteRows(at: [indexPath], with: .automatic)
         tableView.endUpdates()
         // Remove from db
-        player.firDocument!.delete { (error) in
+        player.firDocument.delete { (error) in
             guard let error = error else { return }
-            self.logger.logWarning("Error deleting player [\(player.firPath!)]: \(error)")
+            self.logger.logWarning("Error deleting player [\(player.firPath)]: \(error)")
             // Add to collection again
             self.players.append(player)
             self.tableView.beginUpdates()
