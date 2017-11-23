@@ -32,3 +32,17 @@ extension Player {
         self.init(firstName: contact.givenName, lastName: contact.familyName)
     }
 }
+
+protocol PlayerContainer {
+    var playerPaths: Set<String> { get }
+}
+
+extension PlayerContainer {
+    func getPlayers(completion: @escaping ([Player], [String: Error]) -> Void) {
+        let documents = playerPaths.map { Firestore.firestore().document($0) }
+        documents.getObjects(queue: .sharedAsync) { (results: [(DocumentSnapshot, Player)], errors) in
+            let players = results.map { $0.1 }
+            completion(players, errors)
+        }
+    }
+}

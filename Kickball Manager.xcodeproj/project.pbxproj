@@ -9,6 +9,14 @@
 /* Begin PBXBuildFile section */
 		5FD2E257C0D45B476CB13E3E /* Pods_Kickball_Manager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78B0830125A59E2B007B2473 /* Pods_Kickball_Manager.framework */; };
 		74037D601FA93FEB006D8CBC /* KMUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74037D5F1FA93FEB006D8CBC /* KMUser.swift */; };
+		749905201FC74DF800363781 /* GetCollectionOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7499051F1FC74DF800363781 /* GetCollectionOperation.swift */; };
+		749905221FC7504800363781 /* GetObjectOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749905211FC7504800363781 /* GetObjectOperation.swift */; };
+		749905241FC7559500363781 /* OperationQueueExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749905231FC7559500363781 /* OperationQueueExtension.swift */; };
+		749905261FC7611900363781 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749905251FC7611900363781 /* Game.swift */; };
+		749905281FC765E600363781 /* GameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749905271FC765E600363781 /* GameController.swift */; };
+		7499052A1FC76A3000363781 /* Kicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749905291FC76A3000363781 /* Kicker.swift */; };
+		7499052C1FC76B0A00363781 /* Inning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7499052B1FC76B0A00363781 /* Inning.swift */; };
+		7499052E1FC76B7600363781 /* OutfieldPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7499052D1FC76B7600363781 /* OutfieldPosition.swift */; };
 		74C289E51FBB97370057493A /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74C289E41FBB97370057493A /* Team.swift */; };
 		74CC91531FA92C1200820E67 /* ContactsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74CC91521FA92C1200820E67 /* ContactsHelper.swift */; };
 		74F2F8AF1FB5239200D08553 /* CreateTeamController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F2F8AE1FB5239200D08553 /* CreateTeamController.swift */; };
@@ -26,6 +34,14 @@
 /* Begin PBXFileReference section */
 		2FF6866463817F421655F9D7 /* Pods-Kickball Manager.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kickball Manager.release.xcconfig"; path = "Pods/Target Support Files/Pods-Kickball Manager/Pods-Kickball Manager.release.xcconfig"; sourceTree = "<group>"; };
 		74037D5F1FA93FEB006D8CBC /* KMUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KMUser.swift; sourceTree = "<group>"; };
+		7499051F1FC74DF800363781 /* GetCollectionOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCollectionOperation.swift; sourceTree = "<group>"; };
+		749905211FC7504800363781 /* GetObjectOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetObjectOperation.swift; sourceTree = "<group>"; };
+		749905231FC7559500363781 /* OperationQueueExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationQueueExtension.swift; sourceTree = "<group>"; };
+		749905251FC7611900363781 /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
+		749905271FC765E600363781 /* GameController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameController.swift; sourceTree = "<group>"; };
+		749905291FC76A3000363781 /* Kicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Kicker.swift; sourceTree = "<group>"; };
+		7499052B1FC76B0A00363781 /* Inning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Inning.swift; sourceTree = "<group>"; };
+		7499052D1FC76B7600363781 /* OutfieldPosition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutfieldPosition.swift; sourceTree = "<group>"; };
 		74C289E41FBB97370057493A /* Team.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
 		74CC91521FA92C1200820E67 /* ContactsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsHelper.swift; sourceTree = "<group>"; };
 		74F2F8AE1FB5239200D08553 /* CreateTeamController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTeamController.swift; sourceTree = "<group>"; };
@@ -108,6 +124,14 @@
 				74037D5F1FA93FEB006D8CBC /* KMUser.swift */,
 				74F2F8AE1FB5239200D08553 /* CreateTeamController.swift */,
 				74C289E41FBB97370057493A /* Team.swift */,
+				7499051F1FC74DF800363781 /* GetCollectionOperation.swift */,
+				749905211FC7504800363781 /* GetObjectOperation.swift */,
+				749905231FC7559500363781 /* OperationQueueExtension.swift */,
+				749905251FC7611900363781 /* Game.swift */,
+				749905271FC765E600363781 /* GameController.swift */,
+				749905291FC76A3000363781 /* Kicker.swift */,
+				7499052B1FC76B0A00363781 /* Inning.swift */,
+				7499052D1FC76B7600363781 /* OutfieldPosition.swift */,
 			);
 			path = "Kickball Manager";
 			sourceTree = "<group>";
@@ -268,7 +292,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7499052E1FC76B7600363781 /* OutfieldPosition.swift in Sources */,
+				7499052A1FC76A3000363781 /* Kicker.swift in Sources */,
+				7499052C1FC76B0A00363781 /* Inning.swift in Sources */,
 				74F2F8AF1FB5239200D08553 /* CreateTeamController.swift in Sources */,
+				749905281FC765E600363781 /* GameController.swift in Sources */,
+				749905241FC7559500363781 /* OperationQueueExtension.swift in Sources */,
 				C410CFBF1F9AD10E004A3B37 /* PlayerCell.swift in Sources */,
 				74CC91531FA92C1200820E67 /* ContactsHelper.swift in Sources */,
 				C427F0F51F9AA7CC00A7A8A2 /* ViewController.swift in Sources */,
@@ -276,8 +305,11 @@
 				C427F1071F9AB6AA00A7A8A2 /* Player.swift in Sources */,
 				C427F0F31F9AA7CC00A7A8A2 /* AppDelegate.swift in Sources */,
 				C427F1091F9AB7C900A7A8A2 /* FirestoreHelper.swift in Sources */,
+				749905261FC7611900363781 /* Game.swift in Sources */,
 				74C289E51FBB97370057493A /* Team.swift in Sources */,
 				C410CFBD1F9AD0E2004A3B37 /* PlayerViewController.swift in Sources */,
+				749905201FC74DF800363781 /* GetCollectionOperation.swift in Sources */,
+				749905221FC7504800363781 /* GetObjectOperation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

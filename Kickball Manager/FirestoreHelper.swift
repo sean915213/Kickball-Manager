@@ -20,6 +20,10 @@ typealias FirCodable = Codable & FirebaseTokenProtocol
 private let encoder = JSONEncoder()
 private let decoder = JSONDecoder()
 
+enum FirError: Error {
+    case pathNotSet, documentNotFound
+}
+
 extension CollectionReference {
     
     func getObjects<T: FirDecodable>(completion: @escaping ([T]?, QuerySnapshot?, Error?) -> Void) {
@@ -34,9 +38,6 @@ extension CollectionReference {
             for document in query.documents {
                 do {
                     guard let object: T = try document.data() else { continue }
-                    
-                    print("&& GOT OBJECT: \(object), FIRPATHG: \(object.firPath), FIRDOCUMENT: \(object.firDocument)")
-                    
                     objects.append(object)
                 } catch let coderErr as NSError {
                     completion(objects, query, coderErr)
@@ -74,20 +75,24 @@ extension DocumentReference {
 }
 
 extension DocumentSnapshot {
-    
     func data<T: FirDecodable>() throws -> T? {
         guard exists else { return nil }
         // Get json data from dictionary
         let json = try JSONSerialization.data(withJSONObject: data(), options: [])
         // Decode into type
         var object = try decoder.decode(T.self, from: json)
-        // Assign document id and return
+        // Assign document path
         object.firPath = reference.path
         return object
     }
 }
 
 extension FirebaseTokenProtocol {
+    
+    var firPathURL: URL? {
+        guard let path = firPath else { return nil }
+        return URL(string: path)!
+    }
     
     var firDocument: DocumentReference? {
         guard let path = firPath else { return nil }
@@ -98,12 +103,36 @@ extension FirebaseTokenProtocol {
 extension FirebaseTokenProtocol where Self: FirCodable {
     
     func overwrite(completion: ((Error?) -> Void)? = nil) throws {
-        
-        print("&& FIR DOCUMENT ON: \(self), PATH: \(firPath), DOCUMENT: \(firDocument)")
-        
-        guard let document = firDocument else {
-            fatalError("HANDLE THIS")
-        }
+        guard let document = firDocument else { throw FirError.pathNotSet }
         try document.setData(object: self, completion: completion)
+    }
+}
+
+extension Sequence where Element: DocumentReference {
+    
+    func getObjects<T: FirDecodable>(queue: OperationQueue, completion: @escaping ([(DocumentSnapshot, T)], [String: Error]) -> Void) {
+        // Create operations
+        let operations = map { GetObjectOperation<T>(document: $0) }
+        // Callback
+        let callback = BlockOperation {
+            var results = [(DocumentSnapshot, T)]()
+            var errors = [String: Error]()
+            for operation in operations {
+                guard !operation.isCancelled else { continue }
+                switch operation.result! {
+                case let .success(snapshot, object):
+                    results.append((snapshot, object))
+                case let .failed(error):
+                    errors[operation.document.path] = error
+                }
+            }
+            // Execute callback
+            completion(results, errors)
+        }
+        // Add operations as dependancy
+        operations.forEach { callback.addDependency($0) }
+        // Add to queues
+        queue.addOperations(operations, waitUntilFinished: false)
+        OperationQueue.main.addOperation(callback)
     }
 }

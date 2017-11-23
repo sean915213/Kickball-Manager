@@ -11,8 +11,6 @@ import Firebase
 
 class KMUser: Codable {
     
-//    static var current: KMUser?
-    
     init(firToken: String) {
         self.firToken = firToken
     }

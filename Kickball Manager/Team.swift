@@ -9,15 +9,23 @@
 import Foundation
 import Firebase
 
-class Team: FirCodable {
+class Team: FirCodable, PlayerContainer {
     
-    init(name: String) {
+    init(name: String, owner: KMUser) {
         self.name = name
+        firPath = URL(string: owner.firTeamsCollection.path)!.appendingPathComponent(UUID().uuidString).absoluteString
     }
     
     var name: String
-    var playerIds = Set<String>()
+    var playerPaths = Set<String>()
     
     var firPath: String?
+}
+
+extension Team {
+    
+    var firGamesCollection: CollectionReference? {
+        return firDocument?.collection("games")
+    }
 }
 

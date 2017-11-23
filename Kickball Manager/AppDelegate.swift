@@ -104,14 +104,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
     // MARK: Other Logic
     
     private func proceed(with user: KMUser) {
-        print("&& GOT TO PROCEED WITH USER: \(user)")
-//        let controller = PlayerViewController(user: user)
-        let team = Team(name: "New Team")
+        user.firTeamsCollection.getObjects { (teams: [Team]?, snapshot, error) in
+            let team = teams!.first!
+            let controller = CreateTeamController(user: user, team: team)
+            self.show(controller: controller)
+        }
         
-        // TODO NEED TO FILL IN
-        
-        let controller = CreateTeamController(user: user, team: team)
-        show(controller: controller)
+//
+//        let team = Team(name: "NEW TEAM", owner: user)
+//        let controller = CreateTeamController(user: user, team: team)
+//        self.show(controller: controller)
     }
     
     private func show(controller: UIViewController) {
@@ -133,26 +135,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
             // Proceed with launch
             self.proceed(with: KMUser(firToken: user.uid))
         })
-        
-//        // Get user's Firebase identifying token
-//        user.getIDToken(completion: { (token, error) in
-//            guard let token = token else {
-//                // TODO: SIGN OUT?
-//                print("&& FAILED TO GET TOKEN WITH ERROR: \(error)")
-//                fatalError("Handle this")
-//            }
-//            // Retrieve user document
-//            Firestore.firestore().collection("users").document(token).getDocument(completion: { (document, error) in
-//                guard document?.exists == true else {
-//                    // Create
-//                    self.logger.logInfo("New Firebase user [\(user.email ?? "<no email>")] not found. Creating.")
-//                    self.createNativeUser(with: token)
-//                    return
-//                }
-//                // Proceed with launch
-//                self.proceed(with: KMUser(firToken: token))
-//            })
-//        })
     }
     
     private func createNativeUser(for firUser: User) {
