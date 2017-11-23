@@ -47,19 +47,13 @@ extension CollectionReference {
         }
     }
     
-    func addDocument<T: FirEncodable>(object: T, completion: ((Error?) -> Void)? = nil) throws -> T {
-        // Technically encodable can be a struct so create mutable copy
-        var returnObject = object
-        // Encode into json
-        let json = try encoder.encode(object)
-        // Decode into dictionary
-        let dict = try JSONSerialization.jsonObject(with: json, options: []) as! [String: Any]
-        // Add
-        let document = addDocument(data: dict, completion: completion)
-        // Assign path to object
-        returnObject.firPath = document.path
-        // Return object
-        return returnObject
+    func addObject<T: FirEncodable>(object: T, completion: ((Error?) -> Void)? = nil) throws -> DocumentReference {
+        // Create reference
+        let document = Firestore.firestore().document(object.firPath!)
+        // Set data
+        try document.setData(object: object, completion: completion)
+        // Return document
+        return document
     }
 }
 

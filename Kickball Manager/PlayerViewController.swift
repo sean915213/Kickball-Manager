@@ -103,18 +103,18 @@ class PlayerViewController: UITableViewController, CNContactPickerDelegate {
     func contactPicker(_ picker: CNContactPickerViewController, didSelect contacts: [CNContact]) {
         guard !contacts.isEmpty else { return }
         // Create players
-        let newPlayers = contacts.map { Player(contact: $0) }
+        let newPlayers = contacts.map { Player(contact: $0, owner: user) }
         // Add in Firebase
         for player in newPlayers {
             do {
-                let newPlayer = try user.firPlayersCollection.addDocument(object: player, completion: { (error) in
+                let _ = try user.firPlayersCollection.addObject(object: player, completion: { (error) in
                     guard let error = error else { return }
                     fatalError("HANDLE THIS: \(error)")
                 })
                 // To existing collection and reload
-                players.append(newPlayer)
+                players.append(player)
                 tableView.reloadData()
-                self.logger.logInfo("Saving player at: \(newPlayer.firPath!).")
+                self.logger.logInfo("Saving player at: \(player.firPath!).")
             } catch let error as NSError {
                 fatalError("HANDLE THIS: \(error)")
             }

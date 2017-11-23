@@ -12,9 +12,10 @@ import Firebase
 
 class Player: FirCodable {
     
-    init(firstName: String, lastName: String) {
+    init(firstName: String, lastName: String, owner: KMUser) {
         self.firstName = firstName
         self.lastName = lastName
+        firPath = URL(string: owner.firPlayersCollection.path)!.appendingPathComponent(firstName + "." + lastName).absoluteString
     }
     
     var firstName: String
@@ -28,8 +29,8 @@ class Player: FirCodable {
 }
 
 extension Player {
-    convenience init(contact: CNContact) {
-        self.init(firstName: contact.givenName, lastName: contact.familyName)
+    convenience init(contact: CNContact, owner: KMUser) {
+        self.init(firstName: contact.givenName, lastName: contact.familyName, owner: owner)
     }
 }
 
