@@ -55,11 +55,6 @@ class PlayerViewController: UITableViewController, CNContactPickerDelegate {
                 // TODO: HANDLE THIS
                 fatalError("Handle this: \(error)")
             }
-            
-            for p in players {
-                print("&& ADDING PLAYER: \(p.firPath)")
-            }
-            
             self.players.append(contentsOf: players)
             self.tableView.reloadData()
         }

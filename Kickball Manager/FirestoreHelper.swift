@@ -47,24 +47,45 @@ extension CollectionReference {
         }
     }
     
+    // TODO: Doesn't belong here since using full object path instead of this collection's reference
     func addObject<T: FirEncodable>(object: T, completion: ((Error?) -> Void)? = nil) throws -> DocumentReference {
         // Create reference
         let document = Firestore.firestore().document(object.firPath)
         // Set data
-        try document.setData(object: object, completion: completion)
+        try document.setObject(object: object, completion: completion)
         // Return document
         return document
     }
 }
 
 extension DocumentReference {
-    func setData<T: FirEncodable>(object: T, completion: ((Error?) -> Void)? = nil) throws {
+    
+    func setObject<T: FirEncodable>(object: T, completion: ((Error?) -> Void)? = nil) throws {
         // Encode into json
         let json = try encoder.encode(object)
         // Decode into dictionary
         let dict = try JSONSerialization.jsonObject(with: json, options: []) as! [String: Any]
         // Set
         setData(dict, completion: completion)
+    }
+    
+    func getObject<T: FirDecodable>(completion: @escaping (T?, DocumentSnapshot?, Error?) -> Void) {
+        getDocument { (snapshot, error) in
+            guard let snapshot = snapshot else {
+                completion(nil, nil, error)
+                return
+            }
+            guard snapshot.exists else {
+                completion(nil, snapshot, FirError.documentNotFound)
+                return
+            }
+            do {
+                let object: T = try snapshot.data()!
+                completion(object, snapshot, error)
+            } catch let error {
+                completion(nil, snapshot, error)
+            }
+        }
     }
 }
 
@@ -89,10 +110,16 @@ extension FirebaseTokenProtocol {
     }
 }
 
+extension Equatable where Self: FirebaseTokenProtocol {
+    static func ==(lhs: Self, rhs: Self) -> Bool {
+        return lhs.firPath == rhs.firPath
+    }
+}
+
 extension FirebaseTokenProtocol where Self: FirCodable {
     
-    func overwrite(completion: ((Error?) -> Void)? = nil) throws {
-        try firDocument.setData(object: self, completion: completion)
+    func addOrOverwrite(completion: ((Error?) -> Void)? = nil) throws {
+        try firDocument.setObject(object: self, completion: completion)
     }
 }
 

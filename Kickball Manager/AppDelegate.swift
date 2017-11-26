@@ -18,7 +18,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
     var window: UIWindow? = {
         let win = UIWindow(frame: UIScreen.main.bounds)
         win.backgroundColor = UIColor.white
-//        win.makeKeyAndVisible()
         return win
     }()
     
@@ -34,39 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
         } else {
             performSignIn()
         }
-        
-//        let defaultStore = FirestoreHelper.store
-        
-//        let player = Player(firstName: "first", lastName: "last", throwing: 2, running: 1, kicking: 13)
-//        let encoder = JSONEncoder()
-//        let json = try! encoder.encode(player)
-//
-//        let dict = try! JSONSerialization.jsonObject(with: json, options: []) as! [String: Any]
-        
-        // Add a new document with a generated ID
-//        var ref: DocumentReference? = nil
-//        ref = defaultStore.collection("users").addDocument(object: player) { err in
-//            if let err = err {
-//                print("Error adding document: \(err)")
-//            } else {
-//                print("Document added with ID: \(ref!.documentID)")
-//            }
-//        }
-//        print("&& DOC AFTER ADD: \(ref), ID?: \(ref?.documentID)")
-        
-//        defaultStore.collection("users").getDocuments() { (querySnapshot, err) in
-//            if let err = err {
-//                print("Error getting documents: \(err)")
-//            } else {
-//                for document in querySnapshot!.documents {
-//                    print("\(document.documentID) => \(document.data())")
-//                }
-//
-//                let objects: [Player] = querySnapshot!.getObjects()
-//                print("&& TYPED OBJECTS?: \(objects)")
-//            }
-//        }
-        
+       
         return true
     }
 
@@ -107,7 +74,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
         user.firTeamsCollection.getObjects { (teams: [Team]?, snapshot, error) in
             let team = teams!.first!
             let controller = CreateTeamController(user: user, team: team)
-            self.show(controller: controller)
+            self.show(controller: UINavigationController(rootViewController: controller))
         }
         
 //        let team = Team(name: "NEWER TEAM", owner: user)

@@ -113,10 +113,23 @@ extension NSLayoutConstraint {
     }
 }
 
-extension Array where Element: NSLayoutConstraint {
-    /// Activates an array of `NSLayoutConstraint` objects.
-    public func activate() { NSLayoutConstraint.activate(self) }
-    /// Deactivates an array of `NSLayoutConstraint` objects.
-    public func deactivate() { NSLayoutConstraint.deactivate(self) }
+extension Sequence where Element: NSLayoutConstraint {
+    /// Activates each `NSLayoutConstraint` object.
+    public func activate() {
+        forEach { $0.isActive = true }
+    }
+    /// Deactivates each `NSLayoutConstraint` object.
+    public func deactivate() {
+        forEach { $0.isActive = false }
+    }
+    /// Sets the priority of each `NSLayoutConstraint` object and returns the sequence.
+    public func withPriority(_ priority: UILayoutPriority) -> Self {
+        setPriority(priority)
+        return self
+    }
+    /// Sets the priority of each `NSLayoutConstraint` object.
+    public func setPriority(_ priority: UILayoutPriority) {
+        forEach { $0.priority = priority }
+    }
 }
 
