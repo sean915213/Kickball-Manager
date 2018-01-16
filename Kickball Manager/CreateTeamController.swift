@@ -155,8 +155,10 @@ class CreateTeamController: UITableViewController, PlayerControllerDelegate {
             show(controller, sender: self)
             return
         }
-        let controller = PlayerViewController(user: user)
+        let controller = PlayerViewController()
         controller.delegate = self
+        // Assign current list of players
+        controller.players = players
         show(controller, sender: self)
     }
 }

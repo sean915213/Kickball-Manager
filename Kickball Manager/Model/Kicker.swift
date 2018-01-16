@@ -9,7 +9,7 @@
 import Foundation
 import Firebase
 
-class Kicker: FirCodable, Equatable {
+class Kicker: FirCodable, Equatable, PlayerLinked {
     
     init(number: Int, player: Player, game: Game) {
         self.number = number
@@ -21,13 +21,4 @@ class Kicker: FirCodable, Equatable {
     var playerPath: String
     
     var firPath: String
-}
-
-extension Kicker {
-    
-    func getPlayer(_ completion: @escaping (Player?, Error?) -> Void) {
-        Firestore.firestore().document(playerPath).getObject { (player: Player?, snapshot, error) in
-            completion(player, error)
-        }
-    }
 }

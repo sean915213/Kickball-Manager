@@ -9,7 +9,7 @@
 import Foundation
 import Firebase
 
-class Inning: FirCodable, PlayerContainer {
+class Inning: FirCodable {
     
     init(number: Int, game: Game) {
         self.number = number
@@ -17,7 +17,6 @@ class Inning: FirCodable, PlayerContainer {
     }
     
     var number: Int
-    var playerPaths = Set<String>()
     
     var firPath: String
 }
@@ -26,5 +25,11 @@ extension Inning {
     
     var firPositionsCollection: CollectionReference {
         return firDocument.collection("positions")
+    }
+    
+    func getPositions(_ completion: @escaping ([PlayerPosition]?, Error?) -> Void) {
+        firPositionsCollection.getObjects { (positions: [PlayerPosition]?, snapshot, error) in
+            completion(positions, error)
+        }
     }
 }

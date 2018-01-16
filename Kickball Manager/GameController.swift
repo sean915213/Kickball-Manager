@@ -10,6 +10,9 @@ import UIKit
 import SGYSwiftUtility
 import Firebase
 
+// TODO: Configure this or make it a setting or something
+private let numberOfInnings = 9
+
 class GameController: UITableViewController, PlayerControllerDelegate {
     
     private enum Sections: Int { case players, kickers, innings }
@@ -38,7 +41,7 @@ class GameController: UITableViewController, PlayerControllerDelegate {
     private lazy var innings = [Inning]()
     
     private lazy var playerController: PlayerViewController = {
-        let controller = PlayerViewController(user: self.user)
+        let controller = PlayerViewController()
         controller.delegate = self
         return controller
     }()
@@ -48,12 +51,10 @@ class GameController: UITableViewController, PlayerControllerDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.rightBarButtonItem = editButtonItem
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.register(PlayerCell.self, forCellReuseIdentifier: PlayerCell.reuseId)
         tableView.register(SectionHeaderView.self, forHeaderFooterViewReuseIdentifier: SectionHeaderView.reuseId)
-        
-        navigationItem.rightBarButtonItem = editButtonItem
-        
         // Fetch players
         game.getPlayers { (players, errors) in
             self.players.append(contentsOf: players)
@@ -66,8 +67,7 @@ class GameController: UITableViewController, PlayerControllerDelegate {
         // Fetch innings
         game.firInningsCollection.getObjects { (innings: [Inning]?, snapshot, error) in
             if let innings = innings {
-                self.innings.append(contentsOf: innings)
-                self.tableView.reloadData()
+                self.loadInnings(from: innings)
             } else {
                 self.logger.logWarning("Failed to fetch innings.  Error: \(String(describing: error))")
             }
@@ -100,6 +100,19 @@ class GameController: UITableViewController, PlayerControllerDelegate {
             }
         }
     }
+    
+    private func loadInnings(from existingInnings: [Inning]) {
+        // Create dict of existing innings
+        var inningDict = [Int: Inning]()
+        existingInnings.forEach { inningDict[$0.number] = $0 }
+        // Add all innings
+        for i in 0..<numberOfInnings {
+            // Add existing or create new
+            let inning = inningDict[i] ?? Inning(number: i + 1, game: game)
+            innings.append(inning)
+        }
+        tableView.reloadData()
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -121,6 +134,8 @@ class GameController: UITableViewController, PlayerControllerDelegate {
             print("PLAYER")
             pickingMode = .player
             present(playerController, animated: true, completion: nil)
+            // Assign current list of players
+            playerController.players = players
         case .kickers:
             print("KICKER")
             pickingMode = .kicker
@@ -220,9 +235,9 @@ class GameController: UITableViewController, PlayerControllerDelegate {
         // Change kickers in collection
         let kicker = kickers.remove(at: sourceIndexPath.row)
         kickers.insert(kicker, at: destinationIndexPath.row)
-        // Loop through any changed entries
-        let minIndex = sourceIndexPath.row < destinationIndexPath.row ? sourceIndexPath.row : destinationIndexPath.row
-        for i in minIndex..<kickers.count {
+        // Update only entries with a changed index
+        let (minIndex, maxIndex) = sourceIndexPath.row < destinationIndexPath.row ? (sourceIndexPath.row, destinationIndexPath.row) : (destinationIndexPath.row, sourceIndexPath.row)
+        for i in minIndex...maxIndex {
             let kicker = kickers[i].0
             // Assign new number
             kicker.number = i + 1
@@ -240,7 +255,9 @@ class GameController: UITableViewController, PlayerControllerDelegate {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        isEditing = !isEditing
+        guard indexPath.section == Sections.innings.rawValue else { return }
+        let controller = InningController(user: user, game: game, inning: innings[indexPath.row])
+        show(controller, sender: self)
     }
 
     /*

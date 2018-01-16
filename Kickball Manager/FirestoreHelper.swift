@@ -60,15 +60,6 @@ extension CollectionReference {
 
 extension DocumentReference {
     
-    func setObject<T: FirEncodable>(object: T, completion: ((Error?) -> Void)? = nil) throws {
-        // Encode into json
-        let json = try encoder.encode(object)
-        // Decode into dictionary
-        let dict = try JSONSerialization.jsonObject(with: json, options: []) as! [String: Any]
-        // Set
-        setData(dict, completion: completion)
-    }
-    
     func getObject<T: FirDecodable>(completion: @escaping (T?, DocumentSnapshot?, Error?) -> Void) {
         getDocument { (snapshot, error) in
             guard let snapshot = snapshot else {
@@ -86,6 +77,15 @@ extension DocumentReference {
                 completion(nil, snapshot, error)
             }
         }
+    }
+
+    func setObject<T: FirEncodable>(object: T, completion: ((Error?) -> Void)? = nil) throws {
+        // Encode into json
+        let json = try encoder.encode(object)
+        // Decode into dictionary
+        let dict = try JSONSerialization.jsonObject(with: json, options: []) as! [String: Any]
+        // Set
+        setData(dict, completion: completion)
     }
 }
 
@@ -120,6 +120,14 @@ extension FirebaseTokenProtocol where Self: FirCodable {
     
     func addOrOverwrite(completion: ((Error?) -> Void)? = nil) throws {
         try firDocument.setObject(object: self, completion: completion)
+    }
+}
+
+extension FirebaseTokenProtocol where Self: FirCodable & NSObject {
+    
+    func update(property: String, completion: ((Error?) -> Void)?) {
+        let value = self.value(forKey: property) ?? FieldValue.delete()
+        firDocument.updateData([property: value], completion: completion)
     }
 }
 

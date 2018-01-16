@@ -39,6 +39,8 @@ extension Player {
     }
 }
 
+// MARK: PlayerContainer Protocol
+
 protocol PlayerContainer {
     var playerPaths: Set<String> { get }
 }
@@ -49,6 +51,20 @@ extension PlayerContainer {
         documents.getObjects(queue: .sharedAsync) { (results: [(DocumentSnapshot, Player)], errors) in
             let players = results.map { $0.1 }
             completion(players, errors)
+        }
+    }
+}
+
+// MARK: PlayerLinked Protocol
+
+protocol PlayerLinked {
+    var playerPath: String { get }
+}
+
+extension PlayerLinked {
+    func getPlayer(completion: @escaping (Player?, Error?) -> Void) {
+        Firestore.firestore().document(playerPath).getObject { (player: Player?, snapshot, error) in
+            completion(player, error)
         }
     }
 }

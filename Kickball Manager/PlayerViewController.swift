@@ -19,21 +19,25 @@ class PlayerViewController: UITableViewController, CNContactPickerDelegate {
     
     // MARK: - Initialization
     
-    init(user: KMUser) {
-        self.user = user
-        super.init(style: .plain)
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+//    init(user: KMUser) {
+//        self.user = user
+//        super.init(style: .plain)
+//    }
+//
+//    required init?(coder aDecoder: NSCoder) {
+//        fatalError("init(coder:) has not been implemented")
+//    }
     
     // MARK: - Properties
     
-    let user: KMUser
-    var delegate: PlayerControllerDelegate?
+//    let user: KMUser
+    var players = [Player]() {
+        didSet {
+            tableView.reloadData()
+        }
+    }
     
-    private var players = [Player]()
+    var delegate: PlayerControllerDelegate?
     
     private lazy var logger = Logger(source: "PlayerViewController")
     
@@ -44,21 +48,21 @@ class PlayerViewController: UITableViewController, CNContactPickerDelegate {
         tableView.backgroundColor = .white
         // Register cell classes
         tableView.register(PlayerCell.self, forCellReuseIdentifier: PlayerCell.reuseId)
-        loadPlayers()
+//        loadPlayers()
         addToolbar()
     }
     
-    private func loadPlayers() {
-        user.getPlayers { (players, error) in
-            // Check
-            guard let players = players else {
-                // TODO: HANDLE THIS
-                fatalError("Handle this: \(error)")
-            }
-            self.players.append(contentsOf: players)
-            self.tableView.reloadData()
-        }
-    }
+//    private func loadPlayers() {
+//        user.getPlayers { (players, error) in
+//            // Check
+//            guard let players = players else {
+//                // TODO: HANDLE THIS
+//                fatalError("Handle this: \(error)")
+//            }
+//            self.players.append(contentsOf: players)
+//            self.tableView.reloadData()
+//        }
+//    }
     
     private func addToolbar() {
         let toolbar = UIToolbar(translatesAutoresizingMask: true)
@@ -96,24 +100,28 @@ class PlayerViewController: UITableViewController, CNContactPickerDelegate {
 //    }
     
     func contactPicker(_ picker: CNContactPickerViewController, didSelect contacts: [CNContact]) {
-        guard !contacts.isEmpty else { return }
-        // Create players
-        let newPlayers = contacts.map { Player(contact: $0, owner: user) }
-        // Add in Firebase
-        for player in newPlayers {
-            do {
-                let _ = try user.firPlayersCollection.addObject(object: player, completion: { (error) in
-                    guard let error = error else { return }
-                    fatalError("HANDLE THIS: \(error)")
-                })
-                // To existing collection and reload
-                players.append(player)
-                tableView.reloadData()
-                self.logger.logInfo("Saving player at: \(player.firPath).")
-            } catch let error as NSError {
-                fatalError("HANDLE THIS: \(error)")
-            }
-        }
+        
+        // TODO: NEED TO DELEGATE THIS NOW? BUT SHOULD ALWAYS ALLOW ADDING TO ALL USERS REGARDLESS OF WHERE? OR DELEGATE TO OTHER FUNCTIONS?
+        fatalError("Needs rewritten")
+        
+//        guard !contacts.isEmpty else { return }
+//        // Create players
+//        let newPlayers = contacts.map { Player(contact: $0, owner: user) }
+//        // Add in Firebase
+//        for player in newPlayers {
+//            do {
+//                let _ = try user.firPlayersCollection.addObject(object: player, completion: { (error) in
+//                    guard let error = error else { return }
+//                    fatalError("HANDLE THIS: \(error)")
+//                })
+//                // To existing collection and reload
+//                players.append(player)
+//                tableView.reloadData()
+//                self.logger.logInfo("Saving player at: \(player.firPath).")
+//            } catch let error as NSError {
+//                fatalError("HANDLE THIS: \(error)")
+//            }
+//        }
     }
     
     func contactPicker(_ picker: CNContactPickerViewController, didSelectContactProperties contactProperties: [CNContactProperty]) {
@@ -132,22 +140,27 @@ class PlayerViewController: UITableViewController, CNContactPickerDelegate {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         guard editingStyle == .delete else { return }
-        let player = players[indexPath.row]
-        // Remove entry
-        players.remove(at: indexPath.row)
-        tableView.beginUpdates()
-        tableView.deleteRows(at: [indexPath], with: .automatic)
-        tableView.endUpdates()
-        // Remove from db
-        player.firDocument.delete { (error) in
-            guard let error = error else { return }
-            self.logger.logWarning("Error deleting player [\(player.firPath)]: \(error)")
-            // Add to collection again
-            self.players.append(player)
-            self.tableView.beginUpdates()
-            self.tableView.insertRows(at: [IndexPath(row: self.players.count, section: 0)], with: .automatic)
-            self.tableView.endUpdates()
-        }
+        
+        // TODO: NEED TO DELEGATE THIS NOW THAT DIFFERENT SETS OF PLAYERS CAN BE LOADED
+        fatalError("This needs rewritten")
+        
+        
+//        let player = players[indexPath.row]
+//        // Remove entry
+//        players.remove(at: indexPath.row)
+//        tableView.beginUpdates()
+//        tableView.deleteRows(at: [indexPath], with: .automatic)
+//        tableView.endUpdates()
+//        // Remove from db
+//        player.firDocument.delete { (error) in
+//            guard let error = error else { return }
+//            self.logger.logWarning("Error deleting player [\(player.firPath)]: \(error)")
+//            // Add to collection again
+//            self.players.append(player)
+//            self.tableView.beginUpdates()
+//            self.tableView.insertRows(at: [IndexPath(row: self.players.count, section: 0)], with: .automatic)
+//            self.tableView.endUpdates()
+//        }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

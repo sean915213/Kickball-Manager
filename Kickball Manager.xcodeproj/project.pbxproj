@@ -19,8 +19,11 @@
 		7499053B1FCA295A00363781 /* KMUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749905351FCA295A00363781 /* KMUser.swift */; };
 		7499053C1FCA295A00363781 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749905361FCA295A00363781 /* Player.swift */; };
 		7499053D1FCA295A00363781 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749905371FCA295A00363781 /* Team.swift */; };
-		7499053F1FCA299C00363781 /* OutfieldPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7499053E1FCA299C00363781 /* OutfieldPosition.swift */; };
+		7499053F1FCA299C00363781 /* PlayerPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7499053E1FCA299C00363781 /* PlayerPosition.swift */; };
 		749905411FCA370100363781 /* SectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749905401FCA370100363781 /* SectionHeaderView.swift */; };
+		749B34A41FD21A1100ABB408 /* InningController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749B34A31FD21A1100ABB408 /* InningController.swift */; };
+		74C694CF200D6A1A002BECF5 /* PositionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74C694CE200D6A1A002BECF5 /* PositionCell.swift */; };
+		74C694D1200D6E79002BECF5 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74C694D0200D6E79002BECF5 /* Position.swift */; };
 		74CC91531FA92C1200820E67 /* ContactsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74CC91521FA92C1200820E67 /* ContactsHelper.swift */; };
 		74F2F8AF1FB5239200D08553 /* CreateTeamController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F2F8AE1FB5239200D08553 /* CreateTeamController.swift */; };
 		C410CFBD1F9AD0E2004A3B37 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C410CFBC1F9AD0E2004A3B37 /* PlayerViewController.swift */; };
@@ -46,8 +49,11 @@
 		749905351FCA295A00363781 /* KMUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KMUser.swift; sourceTree = "<group>"; };
 		749905361FCA295A00363781 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		749905371FCA295A00363781 /* Team.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
-		7499053E1FCA299C00363781 /* OutfieldPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OutfieldPosition.swift; sourceTree = "<group>"; };
+		7499053E1FCA299C00363781 /* PlayerPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerPosition.swift; sourceTree = "<group>"; };
 		749905401FCA370100363781 /* SectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeaderView.swift; sourceTree = "<group>"; };
+		749B34A31FD21A1100ABB408 /* InningController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InningController.swift; sourceTree = "<group>"; };
+		74C694CE200D6A1A002BECF5 /* PositionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositionCell.swift; sourceTree = "<group>"; };
+		74C694D0200D6E79002BECF5 /* Position.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Position.swift; sourceTree = "<group>"; };
 		74CC91521FA92C1200820E67 /* ContactsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsHelper.swift; sourceTree = "<group>"; };
 		74F2F8AE1FB5239200D08553 /* CreateTeamController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTeamController.swift; sourceTree = "<group>"; };
 		78B0830125A59E2B007B2473 /* Pods_Kickball_Manager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Kickball_Manager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -96,13 +102,14 @@
 		749905311FCA295A00363781 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				7499053E1FCA299C00363781 /* OutfieldPosition.swift */,
+				7499053E1FCA299C00363781 /* PlayerPosition.swift */,
 				749905321FCA295A00363781 /* Game.swift */,
 				749905331FCA295A00363781 /* Inning.swift */,
 				749905341FCA295A00363781 /* Kicker.swift */,
 				749905351FCA295A00363781 /* KMUser.swift */,
 				749905361FCA295A00363781 /* Player.swift */,
 				749905371FCA295A00363781 /* Team.swift */,
+				74C694D0200D6E79002BECF5 /* Position.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -146,6 +153,8 @@
 				749905271FC765E600363781 /* GameController.swift */,
 				7499052F1FC7767B00363781 /* ButtonCell.swift */,
 				749905401FCA370100363781 /* SectionHeaderView.swift */,
+				749B34A31FD21A1100ABB408 /* InningController.swift */,
+				74C694CE200D6A1A002BECF5 /* PositionCell.swift */,
 			);
 			path = "Kickball Manager";
 			sourceTree = "<group>";
@@ -314,18 +323,21 @@
 				749905241FC7559500363781 /* OperationQueueExtension.swift in Sources */,
 				C410CFBF1F9AD10E004A3B37 /* PlayerCell.swift in Sources */,
 				749905411FCA370100363781 /* SectionHeaderView.swift in Sources */,
+				74C694D1200D6E79002BECF5 /* Position.swift in Sources */,
 				74CC91531FA92C1200820E67 /* ContactsHelper.swift in Sources */,
 				C427F0F51F9AA7CC00A7A8A2 /* ViewController.swift in Sources */,
+				74C694CF200D6A1A002BECF5 /* PositionCell.swift in Sources */,
 				749905391FCA295A00363781 /* Inning.swift in Sources */,
 				C427F0F31F9AA7CC00A7A8A2 /* AppDelegate.swift in Sources */,
 				749905381FCA295A00363781 /* Game.swift in Sources */,
+				749B34A41FD21A1100ABB408 /* InningController.swift in Sources */,
 				7499053B1FCA295A00363781 /* KMUser.swift in Sources */,
 				C427F1091F9AB7C900A7A8A2 /* FirestoreHelper.swift in Sources */,
 				C410CFBD1F9AD0E2004A3B37 /* PlayerViewController.swift in Sources */,
 				749905201FC74DF800363781 /* GetCollectionOperation.swift in Sources */,
 				7499053C1FCA295A00363781 /* Player.swift in Sources */,
 				749905221FC7504800363781 /* GetObjectOperation.swift in Sources */,
-				7499053F1FCA299C00363781 /* OutfieldPosition.swift in Sources */,
+				7499053F1FCA299C00363781 /* PlayerPosition.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
