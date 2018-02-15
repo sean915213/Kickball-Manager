@@ -11,6 +11,8 @@ import SGYSwiftUtility
 
 class PlayerCell: UITableViewCell {
     
+    enum Style { case `default`, discouraged }
+    
     static let reuseId = "com.sdot.kickballManager.playerCell"
     
     // MARK: - Initialization
@@ -29,6 +31,15 @@ class PlayerCell: UITableViewCell {
     var player: Player? {
         didSet {
             if let p = player { configure(with: p) }
+        }
+    }
+    
+    var style: Style = .default {
+        didSet {
+            switch style {
+            case .default: nameLabel.textColor = .black
+            case .discouraged: nameLabel.textColor = .red
+            }
         }
     }
     

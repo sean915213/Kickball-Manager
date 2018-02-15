@@ -26,6 +26,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Configure Firebase
         FirebaseApp.configure()
+        
+//        try! FUIAuth.defaultAuthUI()!.signOut()
+        
         // Check for authorized user
         if let user = FUIAuth.defaultAuthUI()?.auth!.currentUser {
             // Continue
@@ -71,6 +74,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
     // MARK: Other Logic
     
     private func proceed(with user: KMUser) {
+        // DEBUGGING: Assuming teams already exist.  Need a real initial flow.
         user.firTeamsCollection.getObjects { (teams: [Team]?, snapshot, error) in
             let team = teams!.first!
             let controller = CreateTeamController(user: user, team: team)

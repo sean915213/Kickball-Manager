@@ -14,12 +14,10 @@ class Game: FirCodable, PlayerContainer {
     init(number: Int, team: Team) {
         self.number = number
         firPath = team.firGamesCollection.document(String(number)).path
-        print("&& ASSIGNED GAME PATH: \(firPath)")
     }
     
     var number: Int
     var playerPaths = Set<String>()
-    
     
     var firPath: String
 }

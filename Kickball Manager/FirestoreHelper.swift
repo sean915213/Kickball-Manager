@@ -20,9 +20,7 @@ typealias FirCodable = Codable & FirebaseTokenProtocol
 private let encoder = JSONEncoder()
 private let decoder = JSONDecoder()
 
-enum FirError: Error {
-    case documentNotFound
-}
+enum FirError: Error { case documentNotFound }
 
 extension CollectionReference {
     
@@ -93,7 +91,7 @@ extension DocumentSnapshot {
     func data<T: FirDecodable>() throws -> T? {
         guard exists else { return nil }
         // Get json data from dictionary
-        let json = try JSONSerialization.data(withJSONObject: data(), options: [])
+        let json = try JSONSerialization.data(withJSONObject: data()!, options: [])
         // Decode into type
         return try decoder.decode(T.self, from: json)
     }
@@ -116,14 +114,14 @@ extension Equatable where Self: FirebaseTokenProtocol {
     }
 }
 
-extension FirebaseTokenProtocol where Self: FirCodable {
+extension FirebaseTokenProtocol where Self: FirEncodable {
     
     func addOrOverwrite(completion: ((Error?) -> Void)? = nil) throws {
         try firDocument.setObject(object: self, completion: completion)
     }
 }
 
-extension FirebaseTokenProtocol where Self: FirCodable & NSObject {
+extension FirebaseTokenProtocol where Self: NSObject {
     
     func update(property: String, completion: ((Error?) -> Void)?) {
         let value = self.value(forKey: property) ?? FieldValue.delete()

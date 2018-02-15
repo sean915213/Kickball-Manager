@@ -12,10 +12,12 @@ import Firebase
 import ContactsUI
 
 protocol PlayerControllerDelegate: AnyObject {
+    func playerController(_ controller: PlayerViewController, displayStyleFor: Player) -> PlayerCell.Style
     func playerController(_ controller: PlayerViewController, selected: Player)
+    func playerControllerCancelled(_ controller: PlayerViewController)
 }
 
-class PlayerViewController: UITableViewController, CNContactPickerDelegate {
+class PlayerViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CNContactPickerDelegate {
     
     // MARK: - Initialization
     
@@ -41,52 +43,61 @@ class PlayerViewController: UITableViewController, CNContactPickerDelegate {
     
     private lazy var logger = Logger(source: "PlayerViewController")
     
+    private lazy var tableView: UITableView = {
+        let table = UITableView(translatesAutoresizingMask: false)
+        table.delegate = self
+        table.dataSource = self
+        table.backgroundColor = .white
+        table.register(PlayerCell.self, forCellReuseIdentifier: PlayerCell.reuseId)
+        return table
+    }()
+    
     // MARK: - Methods
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.backgroundColor = .white
-        // Register cell classes
-        tableView.register(PlayerCell.self, forCellReuseIdentifier: PlayerCell.reuseId)
-//        loadPlayers()
+        view.addSubview(tableView)
+        NSLayoutConstraint.constraintsPinningView(tableView).activate()
         addToolbar()
     }
     
-//    private func loadPlayers() {
-//        user.getPlayers { (players, error) in
-//            // Check
-//            guard let players = players else {
-//                // TODO: HANDLE THIS
-//                fatalError("Handle this: \(error)")
-//            }
-//            self.players.append(contentsOf: players)
-//            self.tableView.reloadData()
-//        }
-//    }
+    func reloadPlayers() {
+        tableView.beginUpdates()
+        tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
+        tableView.endUpdates()
+    }
     
     private func addToolbar() {
-        let toolbar = UIToolbar(translatesAutoresizingMask: true)
+        let toolbar = UIToolbar(translatesAutoresizingMask: false)
         
         // Add and constrain
-//        view.addSubview(toolbar)
-//        NSLayoutConstraint.constraintsPinningView(toolbar, axis: .horizontal).activate()
-//        toolbar.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        view.addSubview(toolbar)
+        NSLayoutConstraint.constraintsPinningView(toolbar, axis: .horizontal).activate()
+        toolbar.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
-        tableView.tableFooterView = toolbar
+//        tableView.tableFooterView = toolbar
         
-        // Add button
+        // Add buttons
+        // - Add
         let add = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(pressedAdd))
-        toolbar.setItems([add], animated: true)
+        // - Flex
+        let flex = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        // - Cancel
+        let cancel = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(pressedCancel))
         
-        toolbar.sizeToFit()
+        toolbar.setItems([add, flex, cancel], animated: true)
     }
     
     // MARK: Actions
     
-    @objc func pressedAdd() {
+    @objc private func pressedAdd() {
         let controller = CNContactPickerViewController()
         controller.delegate = self
         present(controller, animated: true, completion: nil)
+    }
+    
+    @objc private func pressedCancel() {
+        delegate?.playerControllerCancelled(self)
     }
     
     // CNContactPicker Delegate
@@ -130,15 +141,15 @@ class PlayerViewController: UITableViewController, CNContactPickerDelegate {
 
     // MARK: UITableView DataSource
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return players.count
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         guard editingStyle == .delete else { return }
         
         // TODO: NEED TO DELEGATE THIS NOW THAT DIFFERENT SETS OF PLAYERS CAN BE LOADED
@@ -163,15 +174,17 @@ class PlayerViewController: UITableViewController, CNContactPickerDelegate {
 //        }
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let player = players[indexPath.row]
         let cell: PlayerCell = tableView.dequeueReusableCell(withIdentifier: PlayerCell.reuseId, for: indexPath)
-        cell.player = players[indexPath.row]
+        cell.player = player
+        cell.style = delegate?.playerController(self, displayStyleFor: player) ?? .default
         return cell
     }
     
     // MARK: UITableView Delegate
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         delegate?.playerController(self, selected: players[indexPath.row])
     }
 }

@@ -147,6 +147,10 @@ class GameController: UITableViewController, PlayerControllerDelegate {
     
     // MARK: PlayerController Delegate Implementation
     
+    func playerController(_ controller: PlayerViewController, displayStyleFor: Player) -> PlayerCell.Style {
+        return .default
+    }
+    
     func playerController(_ controller: PlayerViewController, selected player: Player) {
         switch pickingMode! {
         case .player:
@@ -179,6 +183,10 @@ class GameController: UITableViewController, PlayerControllerDelegate {
             })
         }
         // Dismiss
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func playerControllerCancelled(_ controller: PlayerViewController) {
         dismiss(animated: true, completion: nil)
     }
 

@@ -93,6 +93,10 @@ class CreateTeamController: UITableViewController, PlayerControllerDelegate {
     
     // MARK: PlayerControllerDelegate Implementation
     
+    func playerController(_ controller: PlayerViewController, displayStyleFor: Player) -> PlayerCell.Style {
+        return .default
+    }
+    
     func playerController(_ controller: PlayerViewController, selected player: Player) {
         dismiss(animated: true, completion: nil)
         // Add player's id
@@ -106,6 +110,10 @@ class CreateTeamController: UITableViewController, PlayerControllerDelegate {
             fatalError("HANDLE ERR: \(error)")
         }
         print("&& ADDED TO TEAM: \(team.firDocument.documentID)")
+    }
+    
+    func playerControllerCancelled(_ controller: PlayerViewController) {
+        dismiss(animated: true, completion: nil)
     }
     
     // MARK: UITableView Delegate/DataSource Implementation

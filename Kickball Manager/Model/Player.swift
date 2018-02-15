@@ -10,7 +10,7 @@ import Foundation
 import Contacts
 import Firebase
 
-class Player: FirCodable {
+class Player: FirCodable, Equatable {
     
     init(firstName: String, lastName: String, owner: KMUser) {
         self.firstName = firstName

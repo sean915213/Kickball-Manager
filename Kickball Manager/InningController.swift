@@ -29,7 +29,7 @@ class InningController: UITableViewController, PlayerControllerDelegate {
     let user: KMUser
     let game: Game
     let inning: Inning
-    private lazy var positions = [Position: PlayerPosition]()
+    private lazy var players = [Position: Player]()
     
     private lazy var logger = Logger(source: "InningController")
     
@@ -56,59 +56,77 @@ class InningController: UITableViewController, PlayerControllerDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
         title = "Inning: " + String(inning.number)
         tableView.register(PositionCell.self, forCellReuseIdentifier: PositionCell.reuseId)
         // Fetch positions
         inning.getPositions { (positions, error) in
             if let positions = positions {
-                self.loadPositions(from: positions)
+                self.loadPlayers(from: positions)
             } else {
                 self.logger.logWarning("Failed to get positions w/ error: \(error)")
             }
         }
-        
         tableView.reloadData()
         
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        
+        inning.firPositionsCollection.addSnapshotListener { (snapshot, error) in
+            for change in snapshot!.documentChanges {
+                print("&& CHG TYPE: \(change.type.rawValue), DOC: \(change.document.reference.path)")
+            }
+        }
     }
     
-    private func loadPositions(from playerPositions: [PlayerPosition]) {
-        // Assign positions
-        playerPositions.forEach { self.positions[$0.position] = $0 }
-        // Reload data
-        tableView.reloadData()
+    private func loadPlayers(from playerPositions: [PlayerPosition]) {
+        for playerPosition in playerPositions {
+            playerPosition.getPlayer { (player, error) in
+                if let player = player {
+                    self.players[playerPosition.position] = player
+                    self.tableView.beginUpdates()
+                    self.tableView.reloadRows(at: [IndexPath(row: self.allPositions.index(of: playerPosition.position)!, section: 0)], with: .automatic)
+                    self.tableView.endUpdates()
+                } else {
+                    self.logger.logWarning("Failed to get player w/ error: \(error)")
+                }
+            }
+        }
     }
     
     // MARK: PlayerController Delegate
     
+    func playerController(_ controller: PlayerViewController, displayStyleFor player: Player) -> PlayerCell.Style {
+        guard !players.values.contains(player) else { return .discouraged }
+        return .default
+    }
+    
     func playerController(_ controller: PlayerViewController, selected player: Player) {
+        // Make sure player not already selected
+        guard !players.values.contains(player) else {
+            let alert = UIAlertController(title: "Cannot Add", message: "That player is already assigned to a position.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil))
+            alert.display()
+            return
+        }
         // Dismiss
         dismiss(animated: true, completion: nil)
-        // Update
+        // Get the position we were selecting
         let position = allPositions[tableView.indexPathForSelectedRow!.row]
-        let playerPosition: PlayerPosition
-        // Replace or create player position
-        if let existingPosition = positions[position] {
-            existingPosition.playerPath = player.firPath
-            playerPosition = existingPosition
-        } else {
-            playerPosition = PlayerPosition(position: position, player: player, inning: inning)
-        }
-        // Save position
-        try! inning.firPositionsCollection.addObject(object: playerPosition) { (error) in
-            if let error = error { self.logger.logWarning("Error adding player to position: \(error)") }
-        }
-        // Assign and reload
-        positions[position] = playerPosition
+        // Assign player and reload
+        players[position] = player
         tableView.beginUpdates()
         tableView.reloadRows(at: [tableView.indexPathForSelectedRow!], with: .automatic)
         tableView.endUpdates()
+        // Create and save a database representation
+        let playerPosition = PlayerPosition(position: position, player: player, inning: inning)
+        try! playerPosition.addOrOverwrite { (error) in
+            if let error = error { self.logger.logWarning("Failed to save PlayerPosition w/ error: \(error)") }
+        }
     }
-
+    
+    func playerControllerCancelled(_ controller: PlayerViewController) {
+        dismiss(animated: true, completion: nil)
+    }
+    
     // MARK: UITableView Delegate/DataSource
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -120,16 +138,14 @@ class InningController: UITableViewController, PlayerControllerDelegate {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        fatalError("START HERE: Need to also load Player for each PlayerPosition object.")
-        
         let position = allPositions[indexPath.row]
         let cell: PositionCell = tableView.dequeueReusableCell(withIdentifier: PositionCell.reuseId, for: indexPath)
-        cell.configure(for: position, player: nil)
+        cell.configure(for: position, player: players[position])
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         present(playerController, animated: true, completion: nil)
+        playerController.reloadPlayers()
     }
 }
