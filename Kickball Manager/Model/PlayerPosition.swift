@@ -1,5 +1,5 @@
 //
-//  OutfieldPosition.swift
+//  PlayerPosition.swift
 //  Kickball Manager
 //
 //  Created by Sean G Young on 11/23/17.

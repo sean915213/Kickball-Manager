@@ -41,7 +41,7 @@ class GameController: UITableViewController, PlayerControllerDelegate {
     private lazy var innings = [Inning]()
     
     private lazy var playerController: PlayerViewController = {
-        let controller = PlayerViewController()
+        let controller = PlayerViewController(user: user)
         controller.delegate = self
         return controller
     }()
@@ -151,6 +151,11 @@ class GameController: UITableViewController, PlayerControllerDelegate {
         return .default
     }
     
+    func playerController(_ controller: PlayerViewController, shouldSaveNew player: Player) -> Bool {
+        fatalError("HANDLE ME: SHOULD ALLOW?")
+        return false
+    }
+    
     func playerController(_ controller: PlayerViewController, selected player: Player) {
         switch pickingMode! {
         case .player:
@@ -171,7 +176,7 @@ class GameController: UITableViewController, PlayerControllerDelegate {
             let kicker = Kicker(number: kickers.count + 1, player: player, game: game)
             // Add
             // TODO: HANDLE ERRORS
-            let _ = try! game.firKickersCollection.addObject(object: kicker, completion: { (error) in
+            let _ = try! Firestore.firestore().addObject(kicker, completion: { (error) in
                 if let error = error {
                     self.logger.logWarning("Failed to add kicker. Error: \(error)")
                 } else {

@@ -12,8 +12,9 @@ import Firebase
 import ContactsUI
 
 protocol PlayerControllerDelegate: AnyObject {
-    func playerController(_ controller: PlayerViewController, displayStyleFor: Player) -> PlayerCell.Style
-    func playerController(_ controller: PlayerViewController, selected: Player)
+    func playerController(_ controller: PlayerViewController, displayStyleFor player: Player) -> PlayerCell.Style
+    func playerController(_ controller: PlayerViewController, selected player: Player)
+    func playerController(_ controller: PlayerViewController, shouldSaveNew player: Player) -> Bool
     func playerControllerCancelled(_ controller: PlayerViewController)
 }
 
@@ -21,25 +22,32 @@ class PlayerViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     // MARK: - Initialization
     
-//    init(user: KMUser) {
-//        self.user = user
-//        super.init(style: .plain)
-//    }
-//
-//    required init?(coder aDecoder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
+    init(user: KMUser) {
+        self.user = user
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: - Properties
     
-//    let user: KMUser
+    let user: KMUser
+    
     var players = [Player]() {
         didSet {
-            tableView.reloadData()
+            // Sort players by last name
+            players.sort(by: { $0.lastName < $1.lastName })
+//            players = players.sorted(by: { $0.lastName < $1.lastName })
+            // Reload section
+            tableView.beginUpdates()
+            tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
+            tableView.endUpdates()
         }
     }
     
-    var delegate: PlayerControllerDelegate?
+    weak var delegate: PlayerControllerDelegate?
     
     private lazy var logger = Logger(source: "PlayerViewController")
     
@@ -62,6 +70,7 @@ class PlayerViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func reloadPlayers() {
+        // Reload section
         tableView.beginUpdates()
         tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
         tableView.endUpdates()
@@ -91,9 +100,24 @@ class PlayerViewController: UIViewController, UITableViewDelegate, UITableViewDa
     // MARK: Actions
     
     @objc private func pressedAdd() {
-        let controller = CNContactPickerViewController()
-        controller.delegate = self
-        present(controller, animated: true, completion: nil)
+        // Must fetch all contacts and find a single attribute to filter on (i.e. identifier) in order to use an NSPredicate to disable contacts in CNContactPickerViewController.
+        // Should be done off main queue
+        DispatchQueue.global(qos: .userInitiated).async {
+            var invalidIds = [String]()
+            let request = CNContactFetchRequest(keysToFetch: [CNContactGivenNameKey as CNKeyDescriptor, CNContactFamilyNameKey as CNKeyDescriptor])
+            // Enumerate all contacts and add invalid ids
+            try! CNContactStore().enumerateContacts(with: request) { (contact, _) in
+                if self.players.contains(Player(contact: contact, owner: self.user)) { invalidIds.append(contact.identifier) }
+            }
+            // Jump back into main queue to present controller
+            DispatchQueue.main.async {
+                let controller = CNContactPickerViewController()
+                controller.delegate = self
+                // Assign predicate
+                controller.predicateForEnablingContact = NSPredicate(format: "!(identifier IN %@)", invalidIds)
+                self.present(controller, animated: true, completion: nil)
+            }
+        }
     }
     
     @objc private func pressedCancel() {
@@ -111,28 +135,24 @@ class PlayerViewController: UIViewController, UITableViewDelegate, UITableViewDa
 //    }
     
     func contactPicker(_ picker: CNContactPickerViewController, didSelect contacts: [CNContact]) {
-        
-        // TODO: NEED TO DELEGATE THIS NOW? BUT SHOULD ALWAYS ALLOW ADDING TO ALL USERS REGARDLESS OF WHERE? OR DELEGATE TO OTHER FUNCTIONS?
-        fatalError("Needs rewritten")
-        
-//        guard !contacts.isEmpty else { return }
-//        // Create players
-//        let newPlayers = contacts.map { Player(contact: $0, owner: user) }
-//        // Add in Firebase
-//        for player in newPlayers {
-//            do {
-//                let _ = try user.firPlayersCollection.addObject(object: player, completion: { (error) in
-//                    guard let error = error else { return }
-//                    fatalError("HANDLE THIS: \(error)")
-//                })
-//                // To existing collection and reload
-//                players.append(player)
-//                tableView.reloadData()
-//                self.logger.logInfo("Saving player at: \(player.firPath).")
-//            } catch let error as NSError {
-//                fatalError("HANDLE THIS: \(error)")
-//            }
-//        }
+        var newPlayers = [Player]()
+        // Ask delegate whether to add contacts to user's players
+        for contact in contacts {
+            let player = Player(contact: contact, owner: user)
+            if delegate?.playerController(self, shouldSaveNew: player) == true { newPlayers.append(player) }
+        }
+        // Add new players
+        for player in newPlayers {
+            try! player.addOrOverwrite(completion: { (error) in
+                // Log error if it exists or add player
+                if let error = error {
+                    self.logger.logWarning("Failed to add new contact as player w/ error: \(error)")
+                } else {
+                    self.logger.logInfo("Added new player [\(player.firPath)].")
+                    self.players.append(player)
+                }
+            })
+        }
     }
     
     func contactPicker(_ picker: CNContactPickerViewController, didSelectContactProperties contactProperties: [CNContactProperty]) {

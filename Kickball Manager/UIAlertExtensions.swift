@@ -22,3 +22,10 @@ extension UIAlertController {
         newWindow.rootViewController!.present(self, animated: true, completion: completion)
     }
 }
+
+extension UIAlertAction {
+    
+    static func cancel(handler: ((UIAlertAction) -> Void)? = nil) -> UIAlertAction {
+        return UIAlertAction(title: "Cancel", style: .cancel, handler: handler)
+    }
+}

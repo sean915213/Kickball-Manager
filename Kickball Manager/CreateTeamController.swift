@@ -8,6 +8,7 @@
 
 import UIKit
 import SGYSwiftUtility
+import Firebase
 
 class CreateTeamController: UITableViewController, PlayerControllerDelegate {
     
@@ -28,14 +29,17 @@ class CreateTeamController: UITableViewController, PlayerControllerDelegate {
     let user: KMUser
     let team: Team
     private lazy var logger = Logger(source: "CreateTeamController")
-    private lazy var players = [Player]()
-    private lazy var games = [Game]()
     
-//    override var isEditing: Bool {
-//        didSet {
-//
-//        }
-//    }
+    private var players = [Player]() {
+        didSet {
+            players.sort(by: \.lastName)
+            tableView.beginUpdates()
+            tableView.reloadSections(IndexSet(integer: 1), with: .automatic)
+            tableView.endUpdates()
+        }
+    }
+    
+    private lazy var games = [Game]()
     
     // MARK: - Methods
 
@@ -50,10 +54,6 @@ class CreateTeamController: UITableViewController, PlayerControllerDelegate {
         toolbar.sizeToFit()
         toolbar.setItems([button], animated: true)
         tableView.tableFooterView = toolbar
-//        view.addSubview(toolbar)
-//        toolbar.bottomAnchor.constraint(equalTo: tableView.bottomAnchor).isActive = true
-//        NSLayoutConstraint.constraintsPinningView(toolbar, axis: .horizontal).activate()
-        
         // Fetch players
         team.getPlayers { (players, errors) in
             self.players.append(contentsOf: players)
@@ -80,7 +80,7 @@ class CreateTeamController: UITableViewController, PlayerControllerDelegate {
         let game = Game(number: number, team: team)
         game.playerPaths = team.playerPaths
         // Add
-        let _ = try! team.firGamesCollection.addObject(object: game) { (error) in
+        let _ = try! Firestore.firestore().addObject(game) { (error) in
             if let error = error {
                 self.logger.logWarning("Failed to create new game. Error: \(error)")
             } else {
@@ -93,23 +93,33 @@ class CreateTeamController: UITableViewController, PlayerControllerDelegate {
     
     // MARK: PlayerControllerDelegate Implementation
     
-    func playerController(_ controller: PlayerViewController, displayStyleFor: Player) -> PlayerCell.Style {
-        return .default
+    func playerController(_ controller: PlayerViewController, displayStyleFor player: Player) -> PlayerCell.Style {
+        return players.contains(player) ? .discouraged : .default
+    }
+    
+    func playerController(_ controller: PlayerViewController, shouldSaveNew player: Player) -> Bool {
+        // Player controller has access to user's list in this scenario so any eligible contact can be added
+        return true
     }
     
     func playerController(_ controller: PlayerViewController, selected player: Player) {
+        guard !players.contains(player) else {
+            let alert = UIAlertController(title: "Already on Team", message: "Please choose a different player.", preferredStyle: .alert)
+            alert.addAction(.cancel())
+            alert.display()
+            return
+        }
+        // Dismiss
         dismiss(animated: true, completion: nil)
         // Add player's id
         team.playerPaths.insert(player.firPath)
-        // Add to collection and reload
+        // Add to collection
         players.append(player)
-        tableView.reloadData()
         // Update object
         try! team.addOrOverwrite { (error) in
             guard let error = error else { return }
             fatalError("HANDLE ERR: \(error)")
         }
-        print("&& ADDED TO TEAM: \(team.firDocument.documentID)")
     }
     
     func playerControllerCancelled(_ controller: PlayerViewController) {
@@ -163,10 +173,10 @@ class CreateTeamController: UITableViewController, PlayerControllerDelegate {
             show(controller, sender: self)
             return
         }
-        let controller = PlayerViewController()
+        let controller = PlayerViewController(user: user)
         controller.delegate = self
         // Assign current list of players
         controller.players = players
-        show(controller, sender: self)
+        present(controller, animated: true, completion: nil)
     }
 }

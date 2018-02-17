@@ -34,7 +34,7 @@ class InningController: UITableViewController, PlayerControllerDelegate {
     private lazy var logger = Logger(source: "InningController")
     
     private lazy var playerController: PlayerViewController = {
-        let controller = PlayerViewController()
+        let controller = PlayerViewController(user: user)
         controller.delegate = self
         // Load players from game
         self.game.getPlayers(completion: { (players, errors) in
@@ -121,6 +121,11 @@ class InningController: UITableViewController, PlayerControllerDelegate {
         try! playerPosition.addOrOverwrite { (error) in
             if let error = error { self.logger.logWarning("Failed to save PlayerPosition w/ error: \(error)") }
         }
+    }
+    
+    func playerController(_ controller: PlayerViewController, shouldSaveNew player: Player) -> Bool {
+        fatalError("HANDLE ME: SHOULD ALLOW?")
+        return false
     }
     
     func playerControllerCancelled(_ controller: PlayerViewController) {
