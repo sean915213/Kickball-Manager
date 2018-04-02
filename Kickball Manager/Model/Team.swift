@@ -13,7 +13,7 @@ class Team: FirCodable, PlayerContainer {
     
     init(name: String, owner: KMUser) {
         self.name = name
-        firPath = URL(string: owner.firTeamsCollection.path)!.appendingPathComponent(UUID().uuidString).absoluteString
+        firPath = URL(string: owner.teamsCollection.path)!.appendingPathComponent(UUID().uuidString).absoluteString
     }
     
     var name: String
@@ -24,7 +24,7 @@ class Team: FirCodable, PlayerContainer {
 
 extension Team {
     
-    var firGamesCollection: CollectionReference {
+    var gamesCollection: CollectionReference {
         return firDocument.collection("games")
     }
 }

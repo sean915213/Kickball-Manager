@@ -11,7 +11,14 @@ import Foundation
 enum Position: String, Codable {
     case firstBase,
     secondBase,
-    thirdBase
+    thirdBase,
+    shortStop,
+    pitcher,
+    catcher,
+    farLeftField,
+    midLeftField,
+    midRightField,
+    farRightField
     
-    static let allValues: [Position] = [.firstBase, .secondBase, .thirdBase]
+    static let allValues: [Position] = [.firstBase, .secondBase, .thirdBase, .shortStop, .pitcher, .catcher, .farLeftField, .farRightField, .midLeftField, .midRightField]
 }

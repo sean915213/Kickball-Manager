@@ -12,6 +12,26 @@ import FirebaseAuthUI
 import FirebaseGoogleAuthUI
 import SGYSwiftUtility
 
+//protocol TestProt { }
+//extension TestProt {
+//    func update<T>(property: KeyPath<Self, T?>, named name: String, completion: ((Error?) -> Void)? = nil) {
+//
+//        //        let p = \FirebaseTokenProtocol.firPathURL
+//        //        p
+//
+//        let value: Any = self[keyPath: property] ?? "WTF?"
+//        print("&& TEST VAL: \(value)")
+////        let coal: Any? = value ?? "WTF?"
+////        print("&& COAL: \(coal)")
+////        firDocument.updateData([name: value], completion: completion)
+//    }
+//}
+//
+//class TestClass: TestProt {
+//
+//    var test: String?
+//}
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
 
@@ -24,6 +44,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
     private let logger = Logger(source: "AppDelegate")
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        
+//        let cl = TestClass()
+//        cl.update(property: \.test, named: "test")
+//
+//        print("&& FINISHED TEST")
+//
+//        return true;
+        
+        
+        
         // Configure Firebase
         FirebaseApp.configure()
         
@@ -74,10 +104,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
     // MARK: Other Logic
     
     private func proceed(with user: KMUser) {
-        // DEBUGGING: Assuming teams already exist.  Need a real initial flow.
-        user.firTeamsCollection.getObjects { (teams: [Team]?, snapshot, error) in
+        // TODO: Assuming teams already exist.  Need a real initial flow.
+        user.teamsCollection.getObjects { (teams: [Team]?, snapshot, error) in
             let team = teams!.first!
-            let controller = CreateTeamController(user: user, team: team)
+            let controller = TeamController(user: user, team: team)
             self.show(controller: UINavigationController(rootViewController: controller))
         }
         
@@ -96,7 +126,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
     
     private func continueAuth(with user: User) {
         // Get user's document
-        KMUser.firCollection.document(user.uid).getDocument(completion: { (document, error) in
+        KMUser.globalCollection.document(user.uid).getDocument(completion: { (document, error) in
             guard document?.exists == true else {
                 // Create
                 self.logger.logInfo("New Firebase user [\(user.uid)] not found. Creating.")
@@ -105,12 +135,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, FUIAuthDelegate {
             }
             // Proceed with launch
             self.proceed(with: KMUser(firToken: user.uid))
+            // Seed players
+            Mock.seedPlayers(forUser: KMUser(firToken: user.uid))
+            print("&& SEEDED PLAYERS")
         })
     }
     
     private func createNativeUser(for firUser: User) {
         // Create document
-        KMUser.firCollection.document(firUser.uid).setData([:]) { (error) in
+        KMUser.globalCollection.document(firUser.uid).setData([:]) { (error) in
             if let error = error {
                 fatalError("HANDLE THIS: \(error)")
             }

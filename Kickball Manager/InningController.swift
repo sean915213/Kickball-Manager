@@ -9,7 +9,7 @@
 import UIKit
 import SGYSwiftUtility
 
-class InningController: UITableViewController, PlayerControllerDelegate {
+class InningController: UITableViewController, PlayerTableViewControllerDelegate {
     
     // MARK: - Initialization
     
@@ -33,8 +33,8 @@ class InningController: UITableViewController, PlayerControllerDelegate {
     
     private lazy var logger = Logger(source: "InningController")
     
-    private lazy var playerController: PlayerViewController = {
-        let controller = PlayerViewController(user: user)
+    private lazy var playerController: PlayerTableViewController = {
+        let controller = PlayerTableViewController(user: user)
         controller.delegate = self
         // Load players from game
         self.game.getPlayers(completion: { (players, errors) in
@@ -94,12 +94,12 @@ class InningController: UITableViewController, PlayerControllerDelegate {
     
     // MARK: PlayerController Delegate
     
-    func playerController(_ controller: PlayerViewController, displayStyleFor player: Player) -> PlayerCell.Style {
+    func playerController(_ controller: PlayerTableViewController, displayStyleFor player: Player) -> PlayerCell.Style {
         guard !players.values.contains(player) else { return .discouraged }
         return .default
     }
     
-    func playerController(_ controller: PlayerViewController, selected player: Player) {
+    func playerController(_ controller: PlayerTableViewController, selected player: Player) {
         // Make sure player not already selected
         guard !players.values.contains(player) else {
             let alert = UIAlertController(title: "Cannot Add", message: "That player is already assigned to a position.", preferredStyle: .alert)
@@ -123,12 +123,12 @@ class InningController: UITableViewController, PlayerControllerDelegate {
         }
     }
     
-    func playerController(_ controller: PlayerViewController, shouldSaveNew player: Player) -> Bool {
+    func playerController(_ controller: PlayerTableViewController, shouldSaveNew player: Player) -> Bool {
         fatalError("HANDLE ME: SHOULD ALLOW?")
         return false
     }
     
-    func playerControllerCancelled(_ controller: PlayerViewController) {
+    func playerControllerCancelled(_ controller: PlayerTableViewController) {
         dismiss(animated: true, completion: nil)
     }
     

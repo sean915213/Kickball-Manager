@@ -22,15 +22,20 @@
 		7499053F1FCA299C00363781 /* PlayerPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7499053E1FCA299C00363781 /* PlayerPosition.swift */; };
 		749905411FCA370100363781 /* SectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749905401FCA370100363781 /* SectionHeaderView.swift */; };
 		749B34A41FD21A1100ABB408 /* InningController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749B34A31FD21A1100ABB408 /* InningController.swift */; };
+		749E56B32071907300341E02 /* PlayerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749E56AF2071907300341E02 /* PlayerCell.swift */; };
+		749E56B42071907300341E02 /* PlayerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749E56B02071907300341E02 /* PlayerTableViewController.swift */; };
+		749E56B52071907300341E02 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749E56B22071907300341E02 /* PlayerViewController.swift */; };
+		749E56B72071963A00341E02 /* TalentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749E56B62071963A00341E02 /* TalentCell.swift */; };
+		749E56BA2071969A00341E02 /* RuleSetProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749E56B92071969A00341E02 /* RuleSetProtocol.swift */; };
+		74BD2AAB204624AD00D0F7D7 /* Talent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74BD2AAA204624AD00D0F7D7 /* Talent.swift */; };
+		74BD2AAD204627D800D0F7D7 /* Mock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74BD2AAC204627D800D0F7D7 /* Mock.swift */; };
 		74BF4E9F2023E45F0009CE1D /* UIAlertExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74BF4E9E2023E45F0009CE1D /* UIAlertExtensions.swift */; };
 		74C694CF200D6A1A002BECF5 /* PositionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74C694CE200D6A1A002BECF5 /* PositionCell.swift */; };
 		74C694D1200D6E79002BECF5 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74C694D0200D6E79002BECF5 /* Position.swift */; };
 		74CC91531FA92C1200820E67 /* ContactsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74CC91521FA92C1200820E67 /* ContactsHelper.swift */; };
 		74DD2EE22037A50900A29C18 /* FirestoreExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74DD2EE12037A50900A29C18 /* FirestoreExtensions.swift */; };
 		74DD2EE42037A52F00A29C18 /* FirebaseTokenProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74DD2EE32037A52F00A29C18 /* FirebaseTokenProtocol.swift */; };
-		74F2F8AF1FB5239200D08553 /* CreateTeamController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F2F8AE1FB5239200D08553 /* CreateTeamController.swift */; };
-		C410CFBD1F9AD0E2004A3B37 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C410CFBC1F9AD0E2004A3B37 /* PlayerViewController.swift */; };
-		C410CFBF1F9AD10E004A3B37 /* PlayerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C410CFBE1F9AD10E004A3B37 /* PlayerCell.swift */; };
+		74F2F8AF1FB5239200D08553 /* TeamController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F2F8AE1FB5239200D08553 /* TeamController.swift */; };
 		C427F0F31F9AA7CC00A7A8A2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C427F0F21F9AA7CC00A7A8A2 /* AppDelegate.swift */; };
 		C427F0F51F9AA7CC00A7A8A2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C427F0F41F9AA7CC00A7A8A2 /* ViewController.swift */; };
 		C427F0FA1F9AA7CD00A7A8A2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C427F0F91F9AA7CD00A7A8A2 /* Assets.xcassets */; };
@@ -54,17 +59,22 @@
 		7499053E1FCA299C00363781 /* PlayerPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerPosition.swift; sourceTree = "<group>"; };
 		749905401FCA370100363781 /* SectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeaderView.swift; sourceTree = "<group>"; };
 		749B34A31FD21A1100ABB408 /* InningController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InningController.swift; sourceTree = "<group>"; };
+		749E56AF2071907300341E02 /* PlayerCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerCell.swift; sourceTree = "<group>"; };
+		749E56B02071907300341E02 /* PlayerTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerTableViewController.swift; sourceTree = "<group>"; };
+		749E56B22071907300341E02 /* PlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
+		749E56B62071963A00341E02 /* TalentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TalentCell.swift; sourceTree = "<group>"; };
+		749E56B92071969A00341E02 /* RuleSetProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuleSetProtocol.swift; sourceTree = "<group>"; };
+		74BD2AAA204624AD00D0F7D7 /* Talent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Talent.swift; sourceTree = "<group>"; };
+		74BD2AAC204627D800D0F7D7 /* Mock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mock.swift; sourceTree = "<group>"; };
 		74BF4E9E2023E45F0009CE1D /* UIAlertExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIAlertExtensions.swift; sourceTree = "<group>"; };
 		74C694CE200D6A1A002BECF5 /* PositionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositionCell.swift; sourceTree = "<group>"; };
 		74C694D0200D6E79002BECF5 /* Position.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Position.swift; sourceTree = "<group>"; };
 		74CC91521FA92C1200820E67 /* ContactsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsHelper.swift; sourceTree = "<group>"; };
 		74DD2EE12037A50900A29C18 /* FirestoreExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirestoreExtensions.swift; sourceTree = "<group>"; };
 		74DD2EE32037A52F00A29C18 /* FirebaseTokenProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseTokenProtocol.swift; sourceTree = "<group>"; };
-		74F2F8AE1FB5239200D08553 /* CreateTeamController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTeamController.swift; sourceTree = "<group>"; };
+		74F2F8AE1FB5239200D08553 /* TeamController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamController.swift; sourceTree = "<group>"; };
 		78B0830125A59E2B007B2473 /* Pods_Kickball_Manager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Kickball_Manager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1BE6C696517C418B7A2C620 /* Pods-Kickball Manager.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kickball Manager.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Kickball Manager/Pods-Kickball Manager.debug.xcconfig"; sourceTree = "<group>"; };
-		C410CFBC1F9AD0E2004A3B37 /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
-		C410CFBE1F9AD10E004A3B37 /* PlayerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerCell.swift; sourceTree = "<group>"; };
 		C427F0EF1F9AA7CC00A7A8A2 /* Kickball Manager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Kickball Manager.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C427F0F21F9AA7CC00A7A8A2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C427F0F41F9AA7CC00A7A8A2 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -114,8 +124,44 @@
 				749905361FCA295A00363781 /* Player.swift */,
 				749905371FCA295A00363781 /* Team.swift */,
 				74C694D0200D6E79002BECF5 /* Position.swift */,
+				74BD2AAA204624AD00D0F7D7 /* Talent.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		749E56AD2071907300341E02 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				749E56AE2071907300341E02 /* PlayerTableViewController */,
+				749E56B12071907300341E02 /* PlayerViewController */,
+			);
+			path = "View Controllers";
+			sourceTree = "<group>";
+		};
+		749E56AE2071907300341E02 /* PlayerTableViewController */ = {
+			isa = PBXGroup;
+			children = (
+				749E56AF2071907300341E02 /* PlayerCell.swift */,
+				749E56B02071907300341E02 /* PlayerTableViewController.swift */,
+			);
+			path = PlayerTableViewController;
+			sourceTree = "<group>";
+		};
+		749E56B12071907300341E02 /* PlayerViewController */ = {
+			isa = PBXGroup;
+			children = (
+				749E56B62071963A00341E02 /* TalentCell.swift */,
+				749E56B22071907300341E02 /* PlayerViewController.swift */,
+			);
+			path = PlayerViewController;
+			sourceTree = "<group>";
+		};
+		749E56B82071966200341E02 /* Rulesets */ = {
+			isa = PBXGroup;
+			children = (
+				749E56B92071969A00341E02 /* RuleSetProtocol.swift */,
+			);
+			path = Rulesets;
 			sourceTree = "<group>";
 		};
 		74DD2EE02037A50900A29C18 /* Firestore */ = {
@@ -148,6 +194,8 @@
 		C427F0F11F9AA7CC00A7A8A2 /* Kickball Manager */ = {
 			isa = PBXGroup;
 			children = (
+				749E56B82071966200341E02 /* Rulesets */,
+				749E56AD2071907300341E02 /* View Controllers */,
 				74DD2EE02037A50900A29C18 /* Firestore */,
 				749905311FCA295A00363781 /* Model */,
 				C427F1041F9AAB8F00A7A8A2 /* GoogleService-Info.plist */,
@@ -156,10 +204,8 @@
 				C427F0F91F9AA7CD00A7A8A2 /* Assets.xcassets */,
 				C427F0FB1F9AA7CD00A7A8A2 /* LaunchScreen.storyboard */,
 				C427F0FE1F9AA7CD00A7A8A2 /* Info.plist */,
-				C410CFBC1F9AD0E2004A3B37 /* PlayerViewController.swift */,
-				C410CFBE1F9AD10E004A3B37 /* PlayerCell.swift */,
 				74CC91521FA92C1200820E67 /* ContactsHelper.swift */,
-				74F2F8AE1FB5239200D08553 /* CreateTeamController.swift */,
+				74F2F8AE1FB5239200D08553 /* TeamController.swift */,
 				7499051F1FC74DF800363781 /* GetCollectionOperation.swift */,
 				749905211FC7504800363781 /* GetObjectOperation.swift */,
 				749905231FC7559500363781 /* OperationQueueExtension.swift */,
@@ -169,6 +215,7 @@
 				749B34A31FD21A1100ABB408 /* InningController.swift */,
 				74C694CE200D6A1A002BECF5 /* PositionCell.swift */,
 				74BF4E9E2023E45F0009CE1D /* UIAlertExtensions.swift */,
+				74BD2AAC204627D800D0F7D7 /* Mock.swift */,
 			);
 			path = "Kickball Manager";
 			sourceTree = "<group>";
@@ -331,26 +378,31 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				749E56B72071963A00341E02 /* TalentCell.swift in Sources */,
 				7499053A1FCA295A00363781 /* Kicker.swift in Sources */,
 				749905301FC7767B00363781 /* ButtonCell.swift in Sources */,
 				7499053D1FCA295A00363781 /* Team.swift in Sources */,
-				74F2F8AF1FB5239200D08553 /* CreateTeamController.swift in Sources */,
+				74F2F8AF1FB5239200D08553 /* TeamController.swift in Sources */,
 				749905281FC765E600363781 /* GameController.swift in Sources */,
 				749905241FC7559500363781 /* OperationQueueExtension.swift in Sources */,
-				C410CFBF1F9AD10E004A3B37 /* PlayerCell.swift in Sources */,
+				749E56B52071907300341E02 /* PlayerViewController.swift in Sources */,
+				74BD2AAB204624AD00D0F7D7 /* Talent.swift in Sources */,
+				74BD2AAD204627D800D0F7D7 /* Mock.swift in Sources */,
 				74DD2EE22037A50900A29C18 /* FirestoreExtensions.swift in Sources */,
 				749905411FCA370100363781 /* SectionHeaderView.swift in Sources */,
 				74C694D1200D6E79002BECF5 /* Position.swift in Sources */,
+				749E56B32071907300341E02 /* PlayerCell.swift in Sources */,
 				74CC91531FA92C1200820E67 /* ContactsHelper.swift in Sources */,
+				749E56B42071907300341E02 /* PlayerTableViewController.swift in Sources */,
 				C427F0F51F9AA7CC00A7A8A2 /* ViewController.swift in Sources */,
 				74C694CF200D6A1A002BECF5 /* PositionCell.swift in Sources */,
 				749905391FCA295A00363781 /* Inning.swift in Sources */,
 				74DD2EE42037A52F00A29C18 /* FirebaseTokenProtocol.swift in Sources */,
+				749E56BA2071969A00341E02 /* RuleSetProtocol.swift in Sources */,
 				C427F0F31F9AA7CC00A7A8A2 /* AppDelegate.swift in Sources */,
 				749905381FCA295A00363781 /* Game.swift in Sources */,
 				749B34A41FD21A1100ABB408 /* InningController.swift in Sources */,
 				7499053B1FCA295A00363781 /* KMUser.swift in Sources */,
-				C410CFBD1F9AD0E2004A3B37 /* PlayerViewController.swift in Sources */,
 				749905201FC74DF800363781 /* GetCollectionOperation.swift in Sources */,
 				74BF4E9F2023E45F0009CE1D /* UIAlertExtensions.swift in Sources */,
 				7499053C1FCA295A00363781 /* Player.swift in Sources */,

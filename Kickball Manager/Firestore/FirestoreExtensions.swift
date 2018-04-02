@@ -28,7 +28,6 @@ extension Firestore {
 
 extension CollectionReference {
     
-    
     /// Fetches documents and deserializes into objects of type `T`.
     ///
     /// - Parameter completion: Called with typed results of query or an error.

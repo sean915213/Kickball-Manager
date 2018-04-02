@@ -14,7 +14,7 @@ class Kicker: FirCodable, Equatable, PlayerLinked {
     init(number: Int, player: Player, game: Game) {
         self.number = number
         self.playerPath = player.firPath
-        firPath = game.firKickersCollection.document(String(number)).path
+        firPath = game.kickersCollection.document(String(number)).path
     }
     
     var number: Int

@@ -13,7 +13,12 @@ import Firebase
 // TODO: Configure this or make it a setting or something
 private let numberOfInnings = 9
 
-class GameController: UITableViewController, PlayerControllerDelegate {
+// TODO: Different organization
+let kickerRuleSets: [AnyRuleSet<Player>] = {
+    return [AnyRuleSet(GenderRuleSet())]
+}()
+
+class GameController: UITableViewController, PlayerTableViewControllerDelegate {
     
     private enum Sections: Int { case players, kickers, innings }
     
@@ -21,8 +26,9 @@ class GameController: UITableViewController, PlayerControllerDelegate {
     
     // MARK: - Initialization
     
-    init(game: Game, user: KMUser) {
+    init(game: Game, team: Team, user: KMUser) {
         self.game = game
+        self.team = team
         self.user = user
         super.init(style: .grouped)
     }
@@ -34,14 +40,16 @@ class GameController: UITableViewController, PlayerControllerDelegate {
     // MARK: - Properties
     
     let game: Game
+    let team: Team
     let user: KMUser
+    
     private lazy var logger = Logger(source: "GameController")
     private lazy var players = [Player]()
     private lazy var kickers = [(Kicker, Player)]()
     private lazy var innings = [Inning]()
     
-    private lazy var playerController: PlayerViewController = {
-        let controller = PlayerViewController(user: user)
+    private lazy var playerController: PlayerTableViewController = {
+        let controller = PlayerTableViewController(user: user)
         controller.delegate = self
         return controller
     }()
@@ -51,6 +59,7 @@ class GameController: UITableViewController, PlayerControllerDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "Game " + String(game.number)
         navigationItem.rightBarButtonItem = editButtonItem
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.register(PlayerCell.self, forCellReuseIdentifier: PlayerCell.reuseId)
@@ -58,14 +67,14 @@ class GameController: UITableViewController, PlayerControllerDelegate {
         // Fetch players
         game.getPlayers { (players, errors) in
             self.players.append(contentsOf: players)
-            self.tableView.reloadData()
+            self.reloadSection(.players)
             guard !errors.isEmpty else { return }
             self.logger.logWarning("Errors fetching players: \(errors)")
         }
         // Fetch kickers
         fetchKickers()
         // Fetch innings
-        game.firInningsCollection.getObjects { (innings: [Inning]?, snapshot, error) in
+        game.inningsCollection.getObjects { (innings: [Inning]?, snapshot, error) in
             if let innings = innings {
                 self.loadInnings(from: innings)
             } else {
@@ -75,7 +84,7 @@ class GameController: UITableViewController, PlayerControllerDelegate {
     }
     
     private func fetchKickers() {
-        game.firKickersCollection.getObjects { (kickers: [Kicker]?, snapshot, error) in
+        game.kickersCollection.getObjects { (kickers: [Kicker]?, snapshot, error) in
             guard let kickers = kickers else {
                 self.logger.logWarning("Failed to fetch kickers.  Error: \(String(describing: error))")
                 return
@@ -93,9 +102,7 @@ class GameController: UITableViewController, PlayerControllerDelegate {
                     // Sort
                     self.kickers.sort { $0.0.number < $1.0.number }
                     // Reload section
-                    self.tableView.beginUpdates()
-                    self.tableView.reloadSections(IndexSet(integer: 1), with: .automatic)
-                    self.tableView.endUpdates()
+                    self.reloadSection(.kickers)
                 }
             }
         }
@@ -111,7 +118,76 @@ class GameController: UITableViewController, PlayerControllerDelegate {
             let inning = inningDict[i] ?? Inning(number: i + 1, game: game)
             innings.append(inning)
         }
-        tableView.reloadData()
+        reloadSection(.innings)
+    }
+    
+    private func addPlayer(_ player: Player) {
+        // Add player and reload
+        players.append(player)
+        reloadSection(.players)
+        // Add to game
+        try! game.addPlayers([player]) { (error) in
+            guard let error = error else { return }
+            self.logger.logWarning("Error adding player to game: \(error)")
+        }
+        // Add to kickers
+        addKicker(for: player)
+    }
+    
+    private func addKicker(for player: Player) {
+        // Create and add new kicker
+        let kicker = Kicker(number: kickers.count + 1, player: player, game: game)
+        try! kicker.addOrOverwrite { (error) in
+            if let error = error {
+                self.logger.logWarning("Failed to add kicker. Error: \(error)")
+            } else {
+                self.logger.logInfo("Added kicker: \(kicker.firPath).")
+                // Add and reload
+                self.kickers.append((kicker, player))
+                // Sort kickers
+                self.sortKickers()
+            }
+        }
+    }
+    
+    private func sortKickers() {
+        let originalKickers = kickers.map { $0.0 }
+        let originalPlayers = kickers.map { $0.1 }
+        var sortedPlayers = originalPlayers
+        for rules in kickerRuleSets {
+            do {
+                sortedPlayers = try rules.tryApply(on: sortedPlayers)
+            } catch let error as RuleSetError {
+                let alert = UIAlertController(title: "Kickers Incorrect", message: error.message, preferredStyle: .alert)
+                alert.addAction(UIAlertAction.cancel())
+                present(alert, animated: true, completion: nil)
+            } catch let error {
+                self.logger.logError("Caught unknown error type from ruleSet: \(error)")
+            }
+        }
+        // If same collection then do nothing
+        guard sortedPlayers != originalPlayers else { return }
+        // Reset kickers
+        kickers.removeAll()
+        for i in 0..<sortedPlayers.endIndex {
+            let player = sortedPlayers[i]
+            // Find original kicker entry
+            let kicker = originalKickers.first(where: { $0.playerPath == player.firPath })!
+            // Change kicker number
+            kicker.number = i
+            // Update in database
+            try! kicker.update(property: \.number, named: "number")
+            // Add to kickers
+            kickers.append((kicker, player))
+        }
+        // Reload section
+        reloadSection(.kickers)
+    }
+    
+    private func reloadSection(_ section: Sections) {
+        tableView.beginUpdates()
+        tableView.reloadSections(IndexSet(integer: section.rawValue), with: .automatic)
+        tableView.endUpdates()
     }
 
     override func didReceiveMemoryWarning() {
@@ -131,67 +207,45 @@ class GameController: UITableViewController, PlayerControllerDelegate {
     @objc private func tappedHeaderAdd(on sender: UIButton) {
         switch Sections(rawValue: sender.tag)! {
         case .players:
-            print("PLAYER")
             pickingMode = .player
+            // Begin loading team's players
+            playerController.loadPlayers(from: team)
+            // Present awhile
             present(playerController, animated: true, completion: nil)
-            // Assign current list of players
-            playerController.players = players
         case .kickers:
-            print("KICKER")
             pickingMode = .kicker
             present(playerController, animated: true, completion: nil)
+            // Assign players
+            playerController.players = players
         case .innings:
-            print("INNING")
+            print("TAPPED ADD INNING")
         }
     }
     
     // MARK: PlayerController Delegate Implementation
     
-    func playerController(_ controller: PlayerViewController, displayStyleFor: Player) -> PlayerCell.Style {
+    func playerController(_ controller: PlayerTableViewController, displayStyleFor: Player) -> PlayerCell.Style {
         return .default
     }
     
-    func playerController(_ controller: PlayerViewController, shouldSaveNew player: Player) -> Bool {
+    func playerController(_ controller: PlayerTableViewController, shouldSaveNew player: Player) -> Bool {
         fatalError("HANDLE ME: SHOULD ALLOW?")
         return false
     }
     
-    func playerController(_ controller: PlayerViewController, selected player: Player) {
-        switch pickingMode! {
-        case .player:
-            // Add player and reload
-            players.append(player)
-            tableView.reloadData()
-            // Add to game and overwrite
-            game.playerPaths.insert(player.firPath)
-            try! game.addOrOverwrite(completion: { (error) in
-                if let error = error {
-                    self.logger.logWarning("Failed overwriting game. Error: \(error)")
-                } else {
-                    self.logger.logInfo("Added player: \(player.firPath).")
-                }
-            })
-        case .kicker:
-            // Create new kicker
-            let kicker = Kicker(number: kickers.count + 1, player: player, game: game)
-            // Add
-            // TODO: HANDLE ERRORS
-            let _ = try! Firestore.firestore().addObject(kicker, completion: { (error) in
-                if let error = error {
-                    self.logger.logWarning("Failed to add kicker. Error: \(error)")
-                } else {
-                    self.logger.logInfo("Added kicker: \(kicker.firPath).")
-                    // Insert and reload
-                    self.kickers.append((kicker, player))
-                    self.tableView.reloadData()
-                }
-            })
-        }
+    func playerController(_ controller: PlayerTableViewController, selected player: Player) {
         // Dismiss
         dismiss(animated: true, completion: nil)
+        // Save
+        switch pickingMode! {
+        case .player:
+            addPlayer(player)
+        case .kicker:
+            addKicker(for: player)
+        }
     }
     
-    func playerControllerCancelled(_ controller: PlayerViewController) {
+    func playerControllerCancelled(_ controller: PlayerTableViewController) {
         dismiss(animated: true, completion: nil)
     }
 

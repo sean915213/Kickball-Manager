@@ -13,7 +13,7 @@ class Game: FirCodable, PlayerContainer {
     
     init(number: Int, team: Team) {
         self.number = number
-        firPath = team.firGamesCollection.document(String(number)).path
+        firPath = team.gamesCollection.document(String(number)).path
     }
     
     var number: Int
@@ -24,11 +24,11 @@ class Game: FirCodable, PlayerContainer {
 
 extension Game {
     
-    var firKickersCollection: CollectionReference {
+    var kickersCollection: CollectionReference {
         return firDocument.collection("kickers")
     }
     
-    var firInningsCollection: CollectionReference {
+    var inningsCollection: CollectionReference {
         return firDocument.collection("innings")
     }
 }

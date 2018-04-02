@@ -1,5 +1,5 @@
 //
-//  CreateTeamController.swift
+//  TeamController.swift
 //  Kickball Manager
 //
 //  Created by Sean G Young on 11/9/17.
@@ -10,7 +10,7 @@ import UIKit
 import SGYSwiftUtility
 import Firebase
 
-class CreateTeamController: UITableViewController, PlayerControllerDelegate {
+class TeamController: UITableViewController, PlayerTableViewControllerDelegate {
     
     // MARK: - Initialization
     
@@ -48,11 +48,12 @@ class CreateTeamController: UITableViewController, PlayerControllerDelegate {
         title = team.name
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.register(PlayerCell.self, forCellReuseIdentifier: PlayerCell.reuseId)
-        
-        let button = UIBarButtonItem(title: "Add Game", style: .plain, target: self, action: #selector(tappedAddGame))
+        // Create toolbar
+        let gameButton = UIBarButtonItem(title: "Add Game", style: .plain, target: self, action: #selector(tappedAddGame))
+        let playerButton = UIBarButtonItem(title: "Add Player", style: .plain, target: self, action: #selector(tappedAddPlayer))
         let toolbar = UIToolbar(translatesAutoresizingMask: true)
         toolbar.sizeToFit()
-        toolbar.setItems([button], animated: true)
+        toolbar.setItems([gameButton, playerButton], animated: true)
         tableView.tableFooterView = toolbar
         // Fetch players
         team.getPlayers { (players, errors) in
@@ -91,18 +92,30 @@ class CreateTeamController: UITableViewController, PlayerControllerDelegate {
         }
     }
     
+    @objc private func tappedAddPlayer() {
+        let controller = PlayerTableViewController(user: user)
+        controller.delegate = self
+        user.getPlayers { (players, error) in
+            controller.players = players ?? []
+            if let error = error {
+                fatalError("HANDLE ERR: \(error)")
+            }
+        }
+        present(controller, animated: true, completion: nil)
+    }
+    
     // MARK: PlayerControllerDelegate Implementation
     
-    func playerController(_ controller: PlayerViewController, displayStyleFor player: Player) -> PlayerCell.Style {
+    func playerController(_ controller: PlayerTableViewController, displayStyleFor player: Player) -> PlayerCell.Style {
         return players.contains(player) ? .discouraged : .default
     }
     
-    func playerController(_ controller: PlayerViewController, shouldSaveNew player: Player) -> Bool {
+    func playerController(_ controller: PlayerTableViewController, shouldSaveNew player: Player) -> Bool {
         // Player controller has access to user's list in this scenario so any eligible contact can be added
         return true
     }
     
-    func playerController(_ controller: PlayerViewController, selected player: Player) {
+    func playerController(_ controller: PlayerTableViewController, selected player: Player) {
         guard !players.contains(player) else {
             let alert = UIAlertController(title: "Already on Team", message: "Please choose a different player.", preferredStyle: .alert)
             alert.addAction(.cancel())
@@ -122,7 +135,7 @@ class CreateTeamController: UITableViewController, PlayerControllerDelegate {
         }
     }
     
-    func playerControllerCancelled(_ controller: PlayerViewController) {
+    func playerControllerCancelled(_ controller: PlayerTableViewController) {
         dismiss(animated: true, completion: nil)
     }
     
@@ -173,10 +186,23 @@ class CreateTeamController: UITableViewController, PlayerControllerDelegate {
             show(controller, sender: self)
             return
         }
-        let controller = PlayerViewController(user: user)
-        controller.delegate = self
-        // Assign current list of players
-        controller.players = players
-        present(controller, animated: true, completion: nil)
+
+        // TODO: Remove
+        let player = players[indexPath.row]
+        if player.talents == nil {
+            print("&& SEEDING TALENTS ON: \(player)")
+            player.talents = [Talent: Int]()
+            Talent.allValues.forEach { player.talents![$0] = 0 }
+        }
+        
+        let controller = PlayerViewController()
+        controller.player = players[indexPath.row]
+        show(controller, sender: self)
+        
+//        let controller = PlayerTableViewController(user: user)
+//        controller.delegate = self
+//        // Assign current list of players
+//        controller.players = players
+//        present(controller, animated: true, completion: nil)
     }
 }

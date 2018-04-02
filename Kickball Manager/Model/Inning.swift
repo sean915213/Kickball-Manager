@@ -13,7 +13,7 @@ class Inning: FirCodable {
     
     init(number: Int, game: Game) {
         self.number = number
-        firPath = game.firInningsCollection.document(String(number)).path
+        firPath = game.inningsCollection.document(String(number)).path
     }
     
     var number: Int
